@@ -1,6 +1,12 @@
 import pandas as pd
+import sys
+import os
 from function.ColumnMappingFunction import map_excel_columns 
 from function.Function_Plate_Provice.plate_code import prepare
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+base_path = os.path.dirname(os.path.abspath(__file__))
+destination_file = os.path.join(base_path, "Template", "3-ข้อมูลหลักประกัน - รถเล่ม_ทะเบียน WM.xlsx")
 
 def Migration_to_Template_3_WM(source_file,destination_file,source_sheet,destination_sheet) :
 

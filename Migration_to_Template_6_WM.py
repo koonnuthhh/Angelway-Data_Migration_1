@@ -2,7 +2,13 @@ import pandas as pd
 from openpyxl import load_workbook
 import numpy as np
 import time
+import os
+import sys
 from function.WM_clean_zfloan20 import WM_clean_zfloan20
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+base_path = os.path.dirname(os.path.abspath(__file__))
+destination_file = os.path.join(base_path, "Template", "Temp6 - Copy.xlsx")
 
 start_time = time.time()
 
