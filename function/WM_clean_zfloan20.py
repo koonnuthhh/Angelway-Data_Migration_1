@@ -34,8 +34,8 @@ def WM_clean_zfloan20(rawfile) :
     cleaned_data[cleaned_data['Clrng doc.'].notna()][['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']]
     cleaned_data[['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']].isnull().sum()
 
-    cleaned_data.to_excel(r"Temp6_clean_excel\WM_Temp6_cleaned.xlsx", index=False)
-    print("Exported to Temp6_clean_excel\WM_Temp6_cleaned.xlsx")
+    cleaned_data.to_excel(r"function\Temp6_clean_excel\WM_Temp6_cleaned.xlsx", index=False)
+    print("Exported to function\Temp6_clean_excel\WM_Temp6_cleaned.xlsx")
 
     # Remove commas and convert to float
     cleaned_data['        ดบ.ในงวด'] = cleaned_data['        ดบ.ในงวด'].str.replace(',', '').astype(float)
@@ -53,8 +53,8 @@ def WM_clean_zfloan20(rawfile) :
 
     print(cleaned_dataV2)
 
-    cleaned_dataV2.to_excel(r"Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx", index=False)
-    print("Exported to Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx")
+    cleaned_dataV2.to_excel(r"function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx", index=False)
+    print("Exported to function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx")
 
     # Remove commas and convert to float
     cleaned_dataV2['              เงินต้น'] = cleaned_dataV2['              เงินต้น'].str.replace(',', '').astype(float)

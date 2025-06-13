@@ -9,7 +9,7 @@ from function.FunctionForX_1AndX_2AndX_3.setWL_location import start
 from datetime import datetime
 import os
 
-def process_wl_data(
+def Migration_to_template_1_1_2_1(
     source_file,
     source_sheet,
     template_1_path,
@@ -21,7 +21,7 @@ def process_wl_data(
     output_1 = template_1_path
     output_2 = template_2_path
 
-    df_clean = clean_name(source_file, "ชื่อลูกค้า")
+    df_clean = clean_name(source_file,source_sheet, "ชื่อลูกค้า")
     column_map = {'คำนำหน้า': 'คำนำหน้า', 'ชื่อ': 'ชื่อ', 'นามสกุล': 'นามสกุล'}
 
     update_xlsx_with_clean_data(source_file, df_clean, column_map, sheet_name=source_sheet)

@@ -6,7 +6,7 @@ from function.FunctionForX_1AndX_2AndX_3.ChangeFormatMoney import ChangeFormatMo
 from function.FunctionForX_1AndX_2AndX_3.define_customer_type import define_customer_type
 from function.FunctionForX_1AndX_2AndX_3.setWL_location import process_address_file
 
-def process_wm_data(
+def Migration_to_template_1_2_2_2(
     source_file,
     source_sheet,
     template_1_path,

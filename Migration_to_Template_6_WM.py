@@ -1,7 +1,6 @@
 import pandas as pd
 from openpyxl import load_workbook
 import numpy as np
-import time
 import os
 import sys
 from function.WM_clean_zfloan20 import WM_clean_zfloan20
@@ -10,7 +9,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 base_path = os.path.dirname(os.path.abspath(__file__))
 destination_file = os.path.join(base_path, "Template", "Temp6 - Copy.xlsx")
 
-start_time = time.time()
 
 def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file) :
     
@@ -18,9 +16,9 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
     WM_clean_zfloan20(zfloan_raw)
     
     # Declare variable
-    source_file2 = "Temp6_clean_excel\WM_Temp6_cleaned.xlsxx" # zfloan20 กรอง 1 
-    source_file2_2 = "Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx" # zfloan20 กรอง 2
-
+    source_file2 = "function\Temp6_clean_excel\WM_Temp6_cleaned.xlsxx" # zfloan20 กรอง 1 
+    source_file2_2 = "function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx" # zfloan20 กรอง 2
+    
     # หน้า sheet ของไฟล์ต้นฉบับ
     source_sheet1 = "รายละเอียด" # WM_1014100
 
@@ -286,5 +284,3 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
         # No need to assign writer.book anymore
         df_template.to_excel(writer, sheet_name=target_sheet, index=False)
         
-    end_time = time.time()
-    print(f"Total time: {end_time - start_time:.2f} seconds")
