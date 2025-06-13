@@ -1,0 +1,68 @@
+import pandas as pd
+
+def WM_clean_zfloan20(rawfile) :
+    #"zfloan20_04.2025 ไฟล์ดิบ.txt"
+    # Read Excel file - the warning doesnt afect work
+    df = pd.read_csv(rawfile, delimiter='\t',  encoding='cp874')
+    df['การหักล้าง'] = pd.to_datetime(df['การหักล้าง'], errors='coerce')
+    doc_col = 'เลขเอกสาร'
+    df[['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']].isnull().sum()
+    def clean_dataframe(df):
+        # Step 1: Drop rows where 'เลขเอกสาร1' is empty (NaN or empty string)
+        df = df[df['เลขเอกสาร'].notna() & (df['เลขเอกสาร'] != '')]
+
+
+        # Step 2: Separate rows where 'Clrng doc.1' is empty (these are kept no matter what)
+        doc_empty = df[df['Clrng doc.'].isna() | (df['Clrng doc.'] == '')]
+
+        # Step 3: Rows where 'Clrng doc.1' has a value
+        doc_has_value = df[df['Clrng doc.'].notna() & (df['Clrng doc.'] != '')].copy()
+
+        # Step 4: Apply your year/month filter on 'การหักล้าง1':
+        # Keep rows where year > 2025 OR (year == 2025 AND month > 4)
+        mask = (doc_has_value['การหักล้าง'].dt.year > 2025) | \
+            ((doc_has_value['การหักล้าง'].dt.year == 2025) & (doc_has_value['การหักล้าง'].dt.month > 4))
+
+        doc_has_value = doc_has_value[mask]
+
+        # Combine both sets of rows
+        clean_df = pd.concat([doc_empty, doc_has_value], ignore_index=True)
+
+        return clean_df
+
+    cleaned_data = clean_dataframe(df)
+    cleaned_data[cleaned_data['Clrng doc.'].notna()][['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']]
+    cleaned_data[['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']].isnull().sum()
+
+    cleaned_data.to_excel(r"Temp6_clean_excel\WM_Temp6_cleaned.xlsx", index=False)
+    print("Exported to Temp6_clean_excel\WM_Temp6_cleaned.xlsx")
+
+    # Remove commas and convert to float
+    cleaned_data['        ดบ.ในงวด'] = cleaned_data['        ดบ.ในงวด'].str.replace(',', '').astype(float)
+
+    # Sum the column
+    sum_column_a = cleaned_data['        ดบ.ในงวด'].sum()
+
+    print("Sum of column ดบ.ในงวด:", sum_column_a)
+
+    # Convert to datetime
+    cleaned_data['Pstng Date'] = pd.to_datetime(cleaned_data['Pstng Date'], dayfirst=True)
+
+    # Keep only rows where date <= 30.04.2025
+    cleaned_dataV2 = cleaned_data[cleaned_data['Pstng Date'] < pd.to_datetime('30/04/2025', dayfirst=True)]
+
+    print(cleaned_dataV2)
+
+    cleaned_dataV2.to_excel(r"Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx", index=False)
+    print("Exported to Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx")
+
+    # Remove commas and convert to float
+    cleaned_dataV2['              เงินต้น'] = cleaned_dataV2['              เงินต้น'].str.replace(',', '').astype(float)
+
+    # Sum the column
+    sum_column_a = cleaned_dataV2['              เงินต้น'].sum()
+
+    print("Sum of column ดบ.ในงวด:", sum_column_a)
+
+    sum_column = cleaned_dataV2['        ดบ.ในงวด'].sum()
+    print(sum_column)
