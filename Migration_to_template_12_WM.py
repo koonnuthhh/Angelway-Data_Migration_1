@@ -1,6 +1,6 @@
 import pandas as pd
 from openpyxl import load_workbook
-
+output_file = "Template_12_WM_output.xlsx"
 # Declare variable
 def Migration_to_template_12_WM(destination_file) :
     source_file = r"function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx"
@@ -29,6 +29,6 @@ def Migration_to_template_12_WM(destination_file) :
     book = load_workbook(destination_file)
 
     # Create a Pandas ExcelWriter using the openpyxl engine
-    with pd.ExcelWriter(destination_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+    with pd.ExcelWriter(output_file , engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
         # No need to assign writer.book anymore
         df_template.to_excel(writer, sheet_name=target_sheet, index=False)

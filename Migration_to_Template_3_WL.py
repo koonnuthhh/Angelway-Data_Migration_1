@@ -4,10 +4,8 @@ from function.replace_text_in_column import replace_text_in_column
 import pandas as pd
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-base_path = os.path.dirname(os.path.abspath(__file__))
-destination_file = os.path.join(base_path, "Template", "3-ข้อมูลหลักประกัน - รถเล่ม&ทะเบียน..xlsx")
 
+output_file = "Template_3_WL_output.xlsx"
 
 def Migration_to_Template_3_WL(source_file, destination_file, source_sheet, destination_sheet):
     column_mapping = {
@@ -47,7 +45,7 @@ def Migration_to_Template_3_WL(source_file, destination_file, source_sheet, dest
     replace_text_in_column(template3_df,'sub_model_code','(C)','C')
     replace_text_in_column(template3_df,'color_code','RED2','RED')
 
-    template3_df.to_excel(destination_file, index=False)
+    template3_df.to_excel(output_file, index=False)
     print('🎉 Save success!')
 
 # Example usage

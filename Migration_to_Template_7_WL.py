@@ -6,10 +6,7 @@ import function.change_Branchcode7_9.branchcode_change as bc
 from openpyxl import load_workbook
 from function.ColumnMappingFunction import map_excel_columns 
 import function.Function_count_group_Wl7.transferGroup as tg
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-base_path = os.path.dirname(os.path.abspath(__file__))
-destination_file = os.path.join(base_path, "Template", "7-ข้อมูลสัญญาเช่าซื้อ.xlsx")
+output_file = "Template_7_WL_output.xlsx"
 
 def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file,destination_sheet) :
 
@@ -114,7 +111,7 @@ def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source
 
 
     final_df.to_excel(
-        destination_file,
+        output_file,
         index=False,
         sheet_name="ข้อมูลสัญญาเชื้อ"
     )

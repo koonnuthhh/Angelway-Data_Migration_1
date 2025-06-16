@@ -7,7 +7,7 @@ from function.ColumnMappingFunction import map_excel_columns
 import warnings
 from function import mapping_for9
 
-
+output_file = "Template_9_WM_output.xlsx"
 # === 🔧 Example usage ===
 def Template_9_WM (source_file,reference_file,destination_file):
  source_sheet = "Sheet1"
@@ -41,7 +41,7 @@ def Template_9_WM (source_file,reference_file,destination_file):
  mapped_df['payfor_code'] = '1001'
  mapped_df['discount']= 0.00
  mapped_df = mapped_df.drop(columns=['paytype_code_x'])
- mapped_df.to_excel(destination_file, index=False)
+ mapped_df.to_excel(output_file , index=False)
  print('🎉 Save success!')
 
 

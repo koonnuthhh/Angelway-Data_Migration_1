@@ -6,7 +6,7 @@ from function.ColumnMappingFunction import map_excel_columns
 from function.replace_text_in_column import replace_text_in_column
 from function import transfer_branchcode as transfer_branchcode
 
-
+output_file = "Template_9_WL_output.xlsx"
 
 def Template_9_WL(source_file,b_zad_path,destination_file):
  source_sheet = "Sheet1"
@@ -54,7 +54,7 @@ def Template_9_WL(source_file,b_zad_path,destination_file):
  template_df.rename(columns={'cont_no.1': 'cont_no'}, inplace=True)
  template_df['Ref_payment'] = payment_df['payment_no_with_year']
  template_df['branch_code'] = payment_df['branch_code']
- template_df.to_excel(destination_file, index=False)
+ template_df.to_excel(output_file, index=False)
  print('🎉 Save success!')
 
 

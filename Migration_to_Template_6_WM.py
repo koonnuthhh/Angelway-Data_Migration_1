@@ -5,9 +5,7 @@ import os
 import sys
 from function.WM_clean_zfloan20 import WM_clean_zfloan20
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-base_path = os.path.dirname(os.path.abspath(__file__))
-destination_file = os.path.join(base_path, "Template", "Temp6 - Copy.xlsx")
+output_file = "Template_6_WL_output.xlsx"
 
 
 def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file) :
@@ -280,7 +278,7 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
     book = load_workbook(destination_file)
 
     # Create a Pandas ExcelWriter using the openpyxl engine
-    with pd.ExcelWriter(destination_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+    with pd.ExcelWriter(output_file , engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
         # No need to assign writer.book anymore
         df_template.to_excel(writer, sheet_name=target_sheet, index=False)
         
