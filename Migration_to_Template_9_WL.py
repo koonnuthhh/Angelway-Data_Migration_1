@@ -6,11 +6,9 @@ from function.ColumnMappingFunction import map_excel_columns
 from function.replace_text_in_column import replace_text_in_column
 from function import transfer_branchcode as transfer_branchcode
 
-base_path = os.path.dirname(os.path.abspath(__file__))
-destination_file = os.path.join(base_path, "Template", "9-ข้อมูลการรับชำระ_WL.xlsx")
 
 
-def Template_9_WL(source_file,b_zad_path):
+def Template_9_WL(source_file,b_zad_path,destination_file):
  source_sheet = "Sheet1"
  destination_sheet = "ข้อมูลการรับชำระ"
 

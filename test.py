@@ -96,44 +96,53 @@ def handle_template_7_WL(inputs, output_dir, log):
 
 
 def handle_template_9_WL(inputs, output_dir, log):
-    source_file = inputs["Source File"][0]
-
-    Template_9_WL(source_file)
+    source_file = inputs["Source 9 File"][0]
+    b_zad_path = inputs["B_Zad File"][0]
+    destination_file = inputs["Template 9 File"][0]
+    Template_9_WL(source_file,b_zad_path,destination_file)
     log("Template 9 WL done.")
 
 
 def handle_template_11_WL(inputs, output_dir, log):
-    source_file = inputs["Source File"][0]
-
-    Template_11_WL(source_file)
+    source_file = inputs["Source 11 WL File"][0]
+    destination_file = inputs["Template 11 WL File"][0]
+    Template_11_WL(source_file,destination_file)
     log("Template 11 WL done.")
 
 
 def handle_template_3_WM(inputs, output_dir, log):
-    source_file = inputs["Source File"][0]
+    source_file = inputs["Source 3 WM File"][0]
+    source_sheet ="Sheet1"
+    destination_file = inputs["Template 3 WM File"][0]
+    destination_sheet = "ข้อมูลหลักประกันรถ"
 
-    Migration_to_Template_3_WM(source_file)
+    Migration_to_Template_3_WM(source_file,destination_file,source_sheet,destination_sheet) 
     log("Template 3 WM done.")
 
 
 def handle_template_6_WM(inputs, output_dir, log):
-    source_file = inputs["Source File"][0]
+    source_file1 = inputs["Source 6.1 File"][0]
+    zfloan_raw  = inputs["Zfloan_raw File"][0]
+    source_file3 = inputs["Source 6.3 File"][0]
+    source_file4 = inputs["Source 6.4 File"][0]
+    destination_file = inputs["Destination 6 WM File"][0]
 
-    Migration_to_Template_6_WM(source_file)
+    Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file)
     log("Template 6 WM done.")
 
 
 def handle_template_9_WM(inputs, output_dir, log):
     source_file = inputs["Source File"][0]
-
-    Template_9_WM(source_file)
+    reference_file = inputs["ประเภทการชำระ File"][0]
+    destination_file = inputs["Destination 9 WM File"][0]
+    Template_9_WM (source_file,reference_file,destination_file)
     log("Template 9 WM done.")
 
 
 def handle_template_12_WM(inputs, output_dir, log):
-    source_file = inputs["Source File"][0]
+    destination_file = inputs["Destination 12 WM File"][0]
 
-    Migration_to_template_12_WM(source_file)
+    Migration_to_template_12_WM(destination_file)
     log("Template 12 WM done.")
 
 
@@ -182,38 +191,48 @@ FUNCTIONS = {
     },
     "Template 9 WL": {
         "inputs": {
-            "Source File": {"multiple": False},
+          "Source 9 File": {"multiple": False},
+          "B_Zad File": {"multiple": False},
+          "Template 9 File": {"multiple": False},
         },
         "handler": handle_template_9_WL
     },
     "Template 11 WL": {
         "inputs": {
-            "Source File": {"multiple": False},
+            "Source 11 WL File": {"multiple": False},
+            "Template 11 WL File": {"multiple": False},
         },
         "handler": handle_template_11_WL
     },
 
     "Template 3 WM": {
         "inputs": {
-            "Source File": {"multiple": False},
+            "Source 3 WM File": {"multiple": False},
+            "Template 3 WM File": {"multiple": False},
         },
         "handler": handle_template_3_WM
     },
     "Template 6 WM": {
         "inputs": {
-            "Source File": {"multiple": False},
+            "Source 6.1 File": {"multiple": False},
+            "Source 6.3 File": {"multiple": False},
+            "Source 6.4 File": {"multiple": False},
+            "Zfloan_raw File": {"multiple": False},
+            "Destination 6 WM File": {"multiple": False},
         },
         "handler": handle_template_6_WM
     },
     "Template 9 WM": {
         "inputs": {
-            "Source File": {"multiple": False},
+            "Source 9 WM File": {"multiple": False},
+            "ประเภทการชำระ File": {"multiple": False},
+            "Destination 9 WM File": {"multiple": False},
         },
         "handler": handle_template_9_WM
     },
     "Template 12 WM": {
         "inputs": {
-            "Source File": {"multiple": False},
+            "Destination 12 WM File": {"multiple": False},
         },
         "handler": handle_template_12_WM
     }

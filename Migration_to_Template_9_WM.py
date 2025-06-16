@@ -7,11 +7,9 @@ from function.ColumnMappingFunction import map_excel_columns
 import warnings
 from function import mapping_for9
 
-base_path = os.path.dirname(os.path.abspath(__file__))
-destination_file = os.path.join(base_path, "Template", "9-ข้อมูลการรับชำระ_WM.xlsx")
 
 # === 🔧 Example usage ===
-def Template_9_WM (source_file,reference_file):
+def Template_9_WM (source_file,reference_file,destination_file):
  source_sheet = "Sheet1"
  destination_sheet = "ข้อมูลการรับชำระ"
 

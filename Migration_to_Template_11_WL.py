@@ -3,10 +3,8 @@ import os
 from openpyxl import load_workbook
 from function.ColumnMappingFunction import map_excel_columns 
 
-base_path = os.path.dirname(os.path.abspath(__file__))
-destination_file = os.path.join(base_path, "Template", "11-ภาษีค่างวดเช่าซื้อ.xlsx")
 
-def Template_11_WL(source_file):
+def Template_11_WL(source_file,destination_file):
  source_sheet = "Sheet1"
  destination_sheet = "ข้อมูลการรับชำระ"
 
