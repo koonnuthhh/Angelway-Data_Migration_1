@@ -32,14 +32,35 @@ class TextRedirector:
 
     def flush(self):
         pass  # Needed for compatibility
-
+#Function use to copy ddestination to result
+def copy_file(source_path, destination_folder=None):
+    """
+    Copy a file to destination folder.
+    If destination folder is None, copy into same directory with '_result' suffix.
+    """
+    if not os.path.isfile(source_path):
+        raise FileNotFoundError(f"Source file not found: {source_path}")
+    
+    # Default behavior: copy into same directory with '_copy'
+    if destination_folder is None:
+        base, ext = os.path.splitext(source_path)
+        destination_path = f"{base}_result{ext}"
+    else:
+        if not os.path.exists(destination_folder):
+            os.makedirs(destination_folder)
+        filename = os.path.basename(source_path)
+        destination_path = os.path.join(destination_folder, filename)
+    
+    shutil.copy2(source_path, destination_path)
+    print(f"Copied: {source_path} -> {destination_path}")
+    return destination_path
 
 # --- Simulated Handlers ---
 def handle_template_1_1_2_1(inputs,output_dir, log):
     log("Process starting...")
     source_file = inputs["Source File"][0]
-    template_1_path = inputs["Template 1.1 File"][0]
-    template_2_path = inputs["Template 2.1 File"][0]
+    template_1_path = copy_file(inputs["Template 1.1 File"][0])
+    template_2_path = copy_file(inputs["Template 2.1 File"][0])
     
     source_file = source_file.rsplit('.', 1)[0] + '.xlsx'
 
@@ -51,9 +72,9 @@ def handle_template_1_2_2_2(inputs, output_dir, log):
     log("Process starting...")
     source_file = inputs["Source File"][0]
     source_sheet = "Sheet1"
-    template_1_path = inputs["Template 1.2 File"][0]
+    template_1_path = copy_file(inputs["Template 1.2 File"][0])
     template_1_sheet = "Template1_WM"
-    template_2_path = inputs["Template 2.2 File"][0]
+    template_2_path = copy_file(inputs["Template 2.2 File"][0])
     template_2_sheet = "Template2_WM"
     full_name_column="ชื่อ-สกุล ลูกค้า"
     address_column="ที่อยู่"
@@ -65,9 +86,9 @@ def handle_template_1_3_2_3(inputs, output_dir, log):
     log("Process starting...")
     source_file = inputs["Source File"][0]
     source_sheet = "Sheet1"
-    template_1_path = inputs["Template 1.3 File"][0]
+    template_1_path = copy_file(inputs["Template 1.3 File"][0])
     template_1_sheet = "Template1"
-    template_2_path = inputs["Template 2.3 File"][0]
+    template_2_path = copy_file(inputs["Template 2.3 File"][0])
     template_2_sheet = "Template2"
 
     Migration_to_template_1_3_2_3(source_file, source_sheet, template_1_path,template_1_sheet,template_2_path,template_2_sheet)
