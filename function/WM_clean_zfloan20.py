@@ -53,8 +53,8 @@ def WM_clean_zfloan20(rawfile) :
 
     print(cleaned_dataV2)
 
-    cleaned_dataV2.to_excel(r"function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx", index=False)
-    print("Exported to function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsxx")
+    cleaned_dataV2.to_excel(r"function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx", index=False)
+    print("Exported to function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx")
 
     # Remove commas and convert to float
     cleaned_dataV2['              เงินต้น'] = cleaned_dataV2['              เงินต้น'].str.replace(',', '').astype(float)

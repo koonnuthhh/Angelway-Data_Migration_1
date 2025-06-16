@@ -1,4 +1,4 @@
-import pandas as pd
+
 from openpyxl import load_workbook
 import numpy as np
 import os
@@ -11,12 +11,12 @@ destination_file = os.path.join(base_path, "Template", "Temp6 - Copy.xlsx")
 
 
 def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file) :
-    
+    import pandas as pd
     #Clean zfloan20 first
     WM_clean_zfloan20(zfloan_raw)
     
     # Declare variable
-    source_file2 = "function\Temp6_clean_excel\WM_Temp6_cleaned.xlsxx" # zfloan20 กรอง 1 
+    source_file2 = "function\Temp6_clean_excel\WM_Temp6_cleaned.xlsx" # zfloan20 กรอง 1 
     source_file2_2 = "function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx" # zfloan20 กรอง 2
     
     # หน้า sheet ของไฟล์ต้นฉบับ
