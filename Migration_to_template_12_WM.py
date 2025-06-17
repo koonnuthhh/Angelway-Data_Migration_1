@@ -1,9 +1,9 @@
 import pandas as pd
 from openpyxl import load_workbook
-output_file = "Template_12_WM_output.xlsx"
+output_file = "12-ข้อมูลค่างวดค้างชำระสัญญาเงินกู้(แยกเงินต้นดอกเบี้ย)_result.xlsx"
 # Declare variable
 def Migration_to_template_12_WM(destination_file) :
-    source_file = r"function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx"
+    source_file = r"WM_Temp6_cleanedV2.xlsx"
     target_sheet = "ค่างวดค้างชำระสัญญาเงินกู้"
     df_template = pd.read_excel(destination_file, sheet_name=target_sheet)
 

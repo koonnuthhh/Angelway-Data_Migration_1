@@ -1,11 +1,10 @@
-
 from openpyxl import load_workbook
 import numpy as np
 import os
 import sys
 from function.WM_clean_zfloan20 import WM_clean_zfloan20
 
-output_file = "Template_6_WL_output.xlsx"
+output_file = "6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก_result.xlsx"
 
 
 def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file) :
@@ -14,8 +13,8 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
     WM_clean_zfloan20(zfloan_raw)
     
     # Declare variable
-    source_file2 = "function\Temp6_clean_excel\WM_Temp6_cleaned.xlsx" # zfloan20 กรอง 1 
-    source_file2_2 = "function\Temp6_clean_excel\WM_Temp6_cleanedV2.xlsx" # zfloan20 กรอง 2
+    source_file2 = "WM_Temp6_cleaned.xlsx" # zfloan20 กรอง 1 
+    source_file2_2 = "WM_Temp6_cleanedV2.xlsx" # zfloan20 กรอง 2
     
     # หน้า sheet ของไฟล์ต้นฉบับ
     source_sheet1 = "รายละเอียด" # WM_1014100
@@ -77,10 +76,6 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
     ## load data
     zf60 = pd.read_excel(source_file4, engine="openpyxl")
 
-    zf60['วันเริ่มต้น'] = pd.to_datetime(zf60['วันเริ่มต้น'], errors='coerce')
-
-    zf60['payment_day'] = zf60['วันเริ่มต้น'].dt.day
-
     zf60['สถานะสัญญา'].astype
 
     # Example: Clean column 'col' to keep only leading digits as string
@@ -90,78 +85,47 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
 
     zf60['สถานะสัญญา'] = zf60['สถานะสัญญา'].astype(str).replace('<NA>', '')
 
-    # Mapping dictionary from description (คำอธิบาย) to loan type code (รหัสประเภทสินเชื่อ)
-    loan_type_map = {
-        "จำนำ-รถจยย.": "LN01",
-        "จำนำ-รถจยย. พิเศษ": "LN02",
-        "จำนำ-รถบรรทุก": "LT01",
-        "จำนำ-รถยนต์": "LC01",
-        "จำนำ-รถยนต์ พิเศษ": "LC02",
-        "ผู้ประกอบอาชีพ": "NN01",
-        "ส่วนบุคคล": "PL01",
-        "ส่วนบุคคล โปรน้ำท่วม": "PL02",
-        "ส่วนบุคคลโปร1": "PL03",
-        "จำนำ-รถยนต์ ดบ.20%": "LC03"
-    }
-
-    interest_flat_rate_map = {
-        "LN01": "24",
-        "LN02": "18",
-        "LT01": "18",
-        "LC01": "24",
-        "LC02": "18",
-        "NN01": "33",
-        "PL01": "25",
-        "PL02": "8",
-        "PL03": "23",
-        "LC03": "20"
-    }
-
-    # map descriptions to loan type codes
-    zf60["ประเภทสินเชื่อ"] = zf60["ประเภทสินเชื่อ"].map(loan_type_map)
-
-    # replace value in int.rte with ประเภทสินเชื่อ
-    zf60['int.rte'] = zf60['ประเภทสินเชื่อ']
-
-    # map interest flat rate base on ประเภทสินเชื่อ
-    zf60["int.rte"] = zf60["int.rte"].map(interest_flat_rate_map)
-
-    zf60 = zf60[["สัญญา","ประเภทสินเชื่อ","int.rte","วันเริ่มต้น","วันสิ้นสุด","payment_day","สถานะสัญญา"]].copy()
+    zf60 = zf60[["สัญญา","สถานะสัญญา"]].copy()
 
     zf60.rename(columns={'สัญญา': 'เลขที่สัญญา'}, inplace=True)
 
-    zf60 = zf60.rename(columns={
-        'ประเภทสินเชื่อ': 'cont_group',
-        'int.rte': 'interest_flat_rate',
-        'วันเริ่มต้น': 'first_due_date',
-        'วันสิ้นสุด': 'last_due_date',
-        'สถานะสัญญา': 'over_due_period'
-    })
+    zf60 = zf60.rename(columns={'สถานะสัญญา': 'over_due_period'})
 
+    ## zf50
     zf50 = pd.read_excel(source_file3, engine="openpyxl")
 
-    zf50 = zf50[["เลขที่สัญญา","วันทำสัญญา","ลูกค้า","เลขที่จดทะเบียน VAT","หมายเลขถัง","เงินต้น",
-                "จำนวนงวด","ค่างวด"]].copy()
+    zf50['วันเริ่มต้น'] = pd.to_datetime(zf50['วันเริ่มต้น'], errors='coerce')
+
+    zf50['payment_day'] = zf50['วันเริ่มต้น'].dt.day
+    
+    zf50 = zf50[["เลขที่สัญญา","วันทำสัญญา","ลูกค้า","เลขที่จดทะเบียน VAT","หมายเลขถัง",
+             "รหัสประเภทสินเชื่อ","เงินต้น","อัตราดอกเบี้ย", "จำนวนงวด",
+             "ค่างวด","วันเริ่มต้น","วันสิ้นสุด","payment_day"]].copy()
 
     for col in ["เลขที่สัญญา", "ลูกค้า", "เลขที่จดทะเบียน VAT"]:
-        zf50[col] = zf50[col].apply(lambda x: str(int(x)) if pd.notnull(x) and isinstance(x, float) and x.is_integer() else str(x) if pd.notnull(x) else np.nan)
-        
-    zf50["วันทำสัญญา2"] = zf50["วันทำสัญญา"]
+        zf50[col] = zf50[col].apply(lambda x: str(int(x)) if pd.notnull(x) and isinstance(x, float) and
+                                x.is_integer() else str(x) if pd.notnull(x) else np.nan)
 
     zf50 = zf50.rename(columns={
-        'วันทำสัญญา': 'cont_date',
-        'ลูกค้า': 'cust_code',
-        'เลขที่จดทะเบียน VAT': 'ID',
-        'หมายเลขถัง': 'chassis_no',
-        'วันทำสัญญา2': 'actual_date',
-        'เงินต้น': 'principal',
-        'จำนวนงวด': 'period',
-        'ค่างวด': 'installment'
+    'รหัสประเภทสินเชื่อ': 'cont_group',
+    'อัตราดอกเบี้ย': 'interest_flat_rate',
+    'วันเริ่มต้น': 'first_due_date',
+    'วันสิ้นสุด': 'last_due_date',
+    'วันทำสัญญา': 'cont_date',
+    'ลูกค้า': 'cust_code',
+    'เลขที่จดทะเบียน VAT': 'ID',
+    'หมายเลขถัง': 'chassis_no',
+    'เงินต้น': 'principal',
+    'จำนวนงวด': 'period',
+    'ค่างวด': 'installment'
     })
+    
+    zf50['actual_date'] = zf50['cont_date']
 
     WM['เลขที่สัญญา'] = WM['เลขที่สัญญา'].apply(lambda x: str(int(x)) if pd.notnull(x) else np.nan)
 
-    zf20_1['interest_accrued'] = pd.to_numeric(zf20_1['interest_accrued'].astype(str).str.replace(',', ''), errors='coerce').fillna(0.0)
+    zf20_1['interest_accrued'] = pd.to_numeric(zf20_1['interest_accrued'].astype(str).str.replace(',', ''),
+                                               errors='coerce').fillna(0.0)
 
     zf20_1['เลขที่สัญญา'] = zf20_1['เลขที่สัญญา'].apply(lambda x: str(int(x)) if pd.notnull(x) else np.nan)
 
@@ -173,13 +137,10 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
 
     for col in columns_to_convert:
         zf20_2[col] = zf20_2[col].str.replace(",", "", regex=False)  # remove commas
-        zf20_2[col] = pd.to_numeric(zf20_2[col], errors='coerce')    # convert to floatzf20_2[columns_to_convert] = zf20_2[columns_to_convert].astype(float)
+        zf20_2[col] = pd.to_numeric(zf20_2[col], errors='coerce')    # convert tofloatzf20_2[columns_to_convert] = zf20_2[columns_to_convert].astype(float)
         
         zf60['เลขที่สัญญา'] = zf60['เลขที่สัญญา'].apply(lambda x: str(int(x)) if pd.notnull(x) else np.nan)
         
-
-
-    import pandas as pd
 
     def merge_column_with_same_ID(df1, df2, df3, df4, df5, id_column, how='left'):
         # Normalize column names
@@ -240,32 +201,32 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
         df_template = df_template.reindex(index=range(len(source_file)))  # add blank rows
         
     column_mapping = {
-        'เลขที่สัญญา': 'cont_no',
-        'cont_date': 'cont_date',
-        'cust_code': 'cust_code',
-        'id': 'ID',
-        'chassis_no': 'chassis_no',
-        'cont_group': 'cont_group',
-        'send_bill_status': 'send_bill_status',##
-        'branch_code': 'branch_code',
-        'actual_date': 'actual_date',
-        'principal': 'principal',
-        'interest_flat_rate': 'interest_flat_rate',
-        'period_installment': 'period_installment',##
-        'period': 'period',
-        'installment': 'installment',
-        'payment_day': 'payment_day',
-        'first_due_date': 'first_due_date',
-        'last_due_date': 'last_due_date',
-        'current_balance': 'current_balance',
-        'interest_accrued': 'interest_accrued',
-        'next_due_date': 'next_due_date',
-        'installment_current': 'installment_current',
-        'installment_interest': 'installment_interest',
-        'installment_over_due': 'installment_over_due',
-        'dpd': 'dpd',
-        'over_due_period': 'over_due_period',
-        'Ref. Aging': 'Ref. Aging'
+    'เลขที่สัญญา': 'cont_no',
+    'cont_date': 'cont_date', 
+    'cust_code': 'cust_code',
+    'id': 'ID',
+    'chassis_no': 'chassis_no',
+    'cont_group': 'cont_group',
+    'send_bill_status': 'send_bill_status',
+    'branch_code': 'branch_code',
+    'actual_date': 'actual_date', 
+    'principal': 'principal',
+    'interest_flat_rate': 'interest_flat_rate',
+    'period_installment': 'period_installment',
+    'period': 'period',
+    'installment': 'installment',
+    'payment_day': 'payment_day',
+    'first_due_date': 'first_due_date',
+    'last_due_date': 'last_due_date',
+    'current_balance': 'current_balance',
+    'interest_accrued': 'interest_accrued',
+    'next_due_date': 'next_due_date',
+    'installment_current': 'installment_current',
+    'installment_interest': 'installment_interest',
+    'installment_over_due': 'installment_over_due',
+    'dpd': 'dpd',
+    'over_due_period': 'over_due_period',
+    'Ref. Aging': 'Ref. Aging'
     }
 
 

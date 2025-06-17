@@ -32,7 +32,7 @@ def transfer_Province(reg_no):
         return '-'
 
     suffix = suffix_match[0].strip().replace('.', '')
-    suffix = suffix.strip('จังหวัด')
+    #ssuffix = suffix.strip('จังหวัด')
     if suffix == '' or suffix.isdigit():
         return '-'
     if suffix == 'กทม':

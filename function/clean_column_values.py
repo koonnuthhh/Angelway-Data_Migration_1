@@ -1,26 +1,6 @@
 import pandas as pd
 
-def clean_column_names(df: pd.DataFrame, column: str) -> pd.DataFrame:
-    # Hardcoded correction mapping
-    clean_column_values = {
-    "MITSUBISHI": ["Mitsubihi", "Mitsubshi", "Misubishi", "Mitsubashi", "Mitzubishi"],
-    "MG": ["Mg", "mg", "MGG", "MG.", "M-G"],
-    "TOYOTA": ["Toyata", "Totota", "Toyoya", "Toyoya", "T0yota"],
-    "ISUZU": ["Iszuzu", "Isuzu", "Isuzu", "Iszsu", "Izuzu"],
-    "DFSK": ["DFK", "DFSKK", "D-FSK", "DSFK", "DFFSK"],
-    "CHEVROLET": ["Chevorlet", "Chevy", "Chevrolat", "Chev", "Cheverlot"],
-    "FORD": ["Forrd", "Fod", "Foed", "F0rd", "Frd"],
-    "HONDA": ["Hondai", "Hando", "Hondo", "Hondar", "Honnda", "ฮอนด้า"],
-    "D-MAX": ["Dmax", "D Max", "D_MAZ", "DMAX", "D-Maax"],
-    "HINO": ["Hinoo", "Hiino", "Hinno", "HINO.", "Hino-"],
-    "GPX": ["GPXX", "GP-PX", "G-PX", "GPPX", "GXP"],
-    "NISSAN": ["Nisan", "Nissin", "Nissam", "Nissaan", "Nissn"],
-    "KUBOTA": ["Kubotaa", "Cubota", "Kobota", "Kuboto", "Kuboata"],
-    "MAZDA": ["Mazdaa", "Masda", "Mazd", "Mazta", "Mazdah"],
-    "SUBARU": ["Suberu", "Subaro", "SubaRu", "Subauru", "Sbaru"],
-    "YAMAHA": ["Yamha", "Yamama", "Yamhaa", "Yamah", "Yamhaa", "YAMAYA"],
-    "VESPA": ["Vesbaa", "Vesspa", "Vspa", "Veespa", "Vesap"],
-}
+def clean_column_names(df: pd.DataFrame, column: str, clean_column_values) -> pd.DataFrame:
 
 
     # Create a reverse lookup for faster correction

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 from openpyxl import load_workbook
 from openpyxl.styles import numbers
@@ -9,6 +10,11 @@ from function import mapping_for9
 
 output_file = "Template_9_WM_output.xlsx"
 # === 🔧 Example usage ===
+def normalize(val):
+    try:
+        return f"{float(val):.2f}"  # convert to float, format as string with 2 decimals
+    except:
+        return str(val).strip()  # fallback for non-numeric values
 def Template_9_WM (source_file,reference_file,destination_file):
  source_sheet = "Sheet1"
  destination_sheet = "ข้อมูลการรับชำระ"
@@ -26,7 +32,10 @@ def Template_9_WM (source_file,reference_file,destination_file):
  }
  mapped_df =map_excel_columns(source_file,destination_file,source_sheet,destination_sheet,column_mapping)
  mapped_df['total_payment'] = mapped_df['principal_paid'] + mapped_df['interest_paid']
- mapped_df['Diff (N & T)']= mapped_df['payment'] - mapped_df['total_payment']
+ mapped_df['Diff (N & T)'] = mapped_df.apply(
+    lambda row: "-" if normalize(row['payment']) == normalize(row['total_payment']) else "ไม่เท่ากัน",
+    axis=1
+)
  reference_df = pd.read_excel(reference_file)
  reference_df = mapping_for9.start(reference_df, 2)
  reference_df['paytype_code_x'] = reference_df['paytype_code']

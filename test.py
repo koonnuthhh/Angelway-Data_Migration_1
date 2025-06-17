@@ -35,22 +35,25 @@ class TextRedirector:
 #Function use to copy destination to result
 def copy_file(source_path):
     """
-    Copy a file into the same folder as the running program, with '_result' suffix.
+    Copy a file into the same folder as the running .exe or .py script, with '_result' suffix.
     """
     if not os.path.isfile(source_path):
         raise FileNotFoundError(f"Source file not found: {source_path}")
 
-    # Get the directory of the currently running script
-    program_dir = os.path.dirname(os.path.abspath(__file__))
+    # Handle PyInstaller EXE and normal script path
+    if getattr(sys, 'frozen', False):  # we are running in a bundle (e.g., .exe)
+        program_dir = os.path.dirname(sys.executable)
+    else:
+        program_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # Get the base name and extension of the source file
+    # Extract base name and extension
     base_name = os.path.splitext(os.path.basename(source_path))[0]
     ext = os.path.splitext(source_path)[1]
 
-    # Create the destination path in the same folder as the program
+    # Create result file in same folder as the EXE/script
     destination_path = os.path.join(program_dir, f"{base_name}_result{ext}")
 
-    # Copy the file
+    # Copy file
     shutil.copy2(source_path, destination_path)
     print(f"Copied: {source_path} -> {destination_path}")
     return destination_path
@@ -146,14 +149,14 @@ def handle_template_6_WM(inputs, output_dir, log):
     zfloan_raw  = inputs["Zfloan_raw File"][0]
     source_file3 = inputs["Source 6.3 File"][0]
     source_file4 = inputs["Source 6.4 File"][0]
-    destination_file = inputs["Destination 6 WM File"][0]
+    destination_file = copy_file(inputs["Destination 6 WM File"][0])
 
     Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file)
     log("Template 6 WM done.")
 
 
 def handle_template_9_WM(inputs, output_dir, log):
-    source_file = inputs["Source File"][0]
+    source_file = inputs["Source 9 WM File"][0]
     reference_file = inputs["ประเภทการชำระ File"][0]
     destination_file = inputs["Destination 9 WM File"][0]
     Template_9_WM (source_file,reference_file,destination_file)
@@ -161,7 +164,7 @@ def handle_template_9_WM(inputs, output_dir, log):
 
 
 def handle_template_12_WM(inputs, output_dir, log):
-    destination_file = inputs["Destination 12 WM File"][0]
+    destination_file = copy_file(inputs["Destination 12 WM File"][0])
 
     Migration_to_template_12_WM(destination_file)
     log("Template 12 WM done.")
