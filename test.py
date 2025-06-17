@@ -32,25 +32,25 @@ class TextRedirector:
 
     def flush(self):
         pass  # Needed for compatibility
-#Function use to copy ddestination to result
-def copy_file(source_path, destination_folder=None):
+#Function use to copy destination to result
+def copy_file(source_path):
     """
-    Copy a file to destination folder.
-    If destination folder is None, copy into same directory with '_result' suffix.
+    Copy a file into the same folder as the running program, with '_result' suffix.
     """
     if not os.path.isfile(source_path):
         raise FileNotFoundError(f"Source file not found: {source_path}")
-    
-    # Default behavior: copy into same directory with '_copy'
-    if destination_folder is None:
-        base, ext = os.path.splitext(source_path)
-        destination_path = f"{base}_result{ext}"
-    else:
-        if not os.path.exists(destination_folder):
-            os.makedirs(destination_folder)
-        filename = os.path.basename(source_path)
-        destination_path = os.path.join(destination_folder, filename)
-    
+
+    # Get the directory of the currently running script
+    program_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Get the base name and extension of the source file
+    base_name = os.path.splitext(os.path.basename(source_path))[0]
+    ext = os.path.splitext(source_path)[1]
+
+    # Create the destination path in the same folder as the program
+    destination_path = os.path.join(program_dir, f"{base_name}_result{ext}")
+
+    # Copy the file
     shutil.copy2(source_path, destination_path)
     print(f"Copied: {source_path} -> {destination_path}")
     return destination_path

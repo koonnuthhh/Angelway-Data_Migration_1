@@ -1,14 +1,12 @@
 # -*- mode: python ; coding: utf-8 -*-
-
 import sys
 sys.setrecursionlimit(sys.getrecursionlimit() * 5)
-
 
 a = Analysis(
     ['test.py'],
     pathex=[],
     binaries=[],
-    datas=[('./*', '.')],
+    datas=[('.', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
