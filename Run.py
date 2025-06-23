@@ -43,14 +43,14 @@ from Migration_to_template_12_WM import Migration_to_template_12_WM
 # ## File temp 6
 # Declare variable
 # ไฟล์ต้นฉบับ
-source_file1 = "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\WM_1014100 - 1014108_04.2025.xls" # WM_1014100
-source_file3 =  "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan50_04.2025.XLSX" # zfloan 50 / มี sheet เดียว
-zfloan_raw = "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan20_04.2025 ไฟล์ดิบ.txt"
-source_file4 = "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan 60 04.2025.xlsx" # zfloan 60 / มี sheet เดียว
+# source_file1 = "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\WM_1014100 - 1014108_04.2025.xls" # WM_1014100
+# source_file3 =  "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan50_04.2025.XLSX" # zfloan 50 / มี sheet เดียว
+# zfloan_raw = "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan20_04.2025 ไฟล์ดิบ.txt"
+# source_file4 = "D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan 60 04.2025.xlsx" # zfloan 60 / มี sheet เดียว
 
-destination_file = r"D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
+# destination_file = r"D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
 
-Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file)
+# Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file)
 
 ## File temp 12
 # destination_file = "12-ข้อมูลค่างวดค้างชำระสัญญาเงินกู้(แยกเงินต้นดอกเบี้ย).xlsx"

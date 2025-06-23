@@ -14,8 +14,9 @@ def Migration_to_template_1_2_2_2(
     template_2_path,
     template_2_sheet,
     full_name_column="ชื่อ-สกุล ลูกค้า",
-    address_column="ที่อยู่"
+    address_column="ที่อยู่ลูกค้า"
 ):
+    
     # 1. Clean customer name
     df_clean = clean_name(source_file, source_sheet, full_name_column)
 
@@ -43,10 +44,11 @@ def Migration_to_template_1_2_2_2(
 
     # 6. Convert income format
     ChangeFormatMoney(template_1_path, template_1_sheet, "รายได้ประจำ")
-
+    
+    print("Before using address proram")
     # 7. Extract address fields from raw file
     maw = process_address_file(source_file, address_column)
-
+    print("After using address proram")
     # 8. Define mapping for address fields
     column_location_map = {
         'ที่อยู่': 'ที่อยู่',

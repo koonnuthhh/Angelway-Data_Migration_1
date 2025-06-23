@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from openpyxl import load_workbook
 import re
 import os
 
@@ -189,16 +190,29 @@ def split_address_components(full_address):
         'รหัส ปณ.': zipcode
     })
 
-def process_address_file(filepath,column_address_name):
+def process_address_file(filepath,column_address_name,worksheet="Sheet1"):
+    print("Before load reference file")
     PROVINCE_LIST, DISTRICT_LIST, SUB_DISTRICT_LIST = load_reference_data()
     ref_data = (PROVINCE_LIST, DISTRICT_LIST, SUB_DISTRICT_LIST)
-
-    df_headers = pd.read_excel(filepath, nrows=0)
+    print("After load reference file")
     
-    # Find the first column that contains the keyword 'ที่อยู่'
-    address_column = next((col for col in df_headers.columns if column_address_name in str(col)))
+    # Step 1: Load header row from openpyxl
+    wb = load_workbook(filepath, data_only=True)
+    ws = wb[worksheet]
+    header_row_cells = ws[1]  # openpyxl is 1-based
+    source_headers = [cell.value if cell.value is not None else f"Unnamed: {i}" 
+                    for i, cell in enumerate(header_row_cells)]
+    print("Headers from openpyxl:", source_headers)
 
-    df = pd.read_excel(filepath, usecols=[address_column])
+    # Step 2: หา column name ที่มีคำว่า column_address_name
+    address_column = next((col for col in source_headers if column_address_name in str(col)), None)
+
+    if address_column is None:
+        raise ValueError(f"Column not found: '{column_address_name}'")
+
+    # Step 3: อ่านเฉพาะคอลัมน์นั้นโดยกำหนดชื่อคอลัมน์เอง
+    df = pd.read_excel(filepath, header=None, skiprows=1, names=source_headers, usecols=[address_column])
+    print(df.head())
 
     df = df.rename(columns={address_column: "ที่อยู่"})
 

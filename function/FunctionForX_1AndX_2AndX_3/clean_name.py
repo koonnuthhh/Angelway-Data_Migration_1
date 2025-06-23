@@ -4,6 +4,7 @@ from Levenshtein import distance as levenshtein_distance
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import seaborn as sns
+from openpyxl import load_workbook
 import re
 
 ## define variable
@@ -22,6 +23,18 @@ target_value = {'ร.ต.อ', 'ส.ต.อ'} # prefix that need to issue note o
 def clean_name(source_file, sheet_name, name_column):
     
     original_df = pd.read_excel(source_file, sheet_name=sheet_name, engine="openpyxl")
+    # Use openpyxl to read actual headers from source
+    
+    wb = load_workbook(source_file, data_only=True)
+    ws = wb[sheet_name]
+    header_row_cells = ws[0 + 1]  # openpyxl is 1-based
+    source_headers = [cell.value if cell.value is not None else f"Unnamed: {i}" 
+                      for i, cell in enumerate(header_row_cells)]
+    # print(source_headers)
+    
+    original_df.columns = source_headers
+    
+    
     df = original_df[[name_column]].copy()
     
     # all prefix that we could check

@@ -58,7 +58,6 @@ def copy_file(source_path):
     print(f"Copied: {source_path} -> {destination_path}")
     return destination_path
 
-# --- Simulated Handlers ---
 def handle_template_1_1_2_1(inputs,output_dir, log):
     log("Process starting...")
     source_file = inputs["Source File"][0]
@@ -69,6 +68,7 @@ def handle_template_1_1_2_1(inputs,output_dir, log):
 
     Migration_to_template_1_1_2_1(source_file,"Sheet1",template_1_path,"Template1_WL", template_2_path,"Template2_WL")
     log("Template 1-1-2-1 done.")
+    messagebox.showinfo("Success", f"Template 1-1-2-1 finished successfully!")
 
 
 def handle_template_1_2_2_2(inputs, output_dir, log):
@@ -80,9 +80,10 @@ def handle_template_1_2_2_2(inputs, output_dir, log):
     template_2_path = copy_file(inputs["Template 2.2 File"][0])
     template_2_sheet = "Template2_WM"
     full_name_column="ชื่อ-สกุล ลูกค้า"
-    address_column="ที่อยู่"
+    address_column="ที่อยู่ลูกค้า"
     Migration_to_template_1_2_2_2(source_file,source_sheet,template_1_path,template_1_sheet,template_2_path,template_2_sheet,full_name_column,address_column)
     log("Template 1-2-2-2 done.")
+    messagebox.showinfo("Success", f"Template 1-2-2-2 finished successfully!")
 
 
 def handle_template_1_3_2_3(inputs, output_dir, log):
@@ -96,16 +97,19 @@ def handle_template_1_3_2_3(inputs, output_dir, log):
 
     Migration_to_template_1_3_2_3(source_file, source_sheet, template_1_path,template_1_sheet,template_2_path,template_2_sheet)
     log("Template 1-3-2-3 done.")
+    messagebox.showinfo("Success", f"Template 1-3-2-3 finished successfully!")
 
 
 def handle_template_3_WL(inputs, output_dir, log):
-    source_file = inputs["Source File"][0]
+    source_file1 = inputs["ZBFMM"][0]
+    source_file2 = inputs["wl_zbicust"][0]
     destination_file = inputs["Template 3"][0]
-    source_sheet = "Sheet1"
+    source_sheet1 = "Sheet1"
+    source_sheet2 = "Sheet1"
     destination_sheet = "ข้อมูลหลักประกันรถ"
-    Migration_to_Template_3_WL(source_file, destination_file, source_sheet, destination_sheet)
+    Migration_to_Template_3_WL(source_file1, source_sheet1, source_file2, source_sheet2, destination_file,destination_sheet)
     log("Template 3 WL done.")
-
+    messagebox.showinfo("Success", f"Template 3 WL finished successfully!")
 
 def handle_template_7_WL(inputs, output_dir, log):
     source_file_1 = inputs["Source 7.1 File"][0]
@@ -117,7 +121,7 @@ def handle_template_7_WL(inputs, output_dir, log):
 
     Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file,destination_sheet)
     log("Template 7 WL done.")
-
+    messagebox.showinfo("Success", f"Template 7 WL finished successfully!")
 
 def handle_template_9_WL(inputs, output_dir, log):
     source_file = inputs["Source 9 File"][0]
@@ -125,14 +129,14 @@ def handle_template_9_WL(inputs, output_dir, log):
     destination_file = inputs["Template 9 File"][0]
     Template_9_WL(source_file,b_zad_path,destination_file)
     log("Template 9 WL done.")
-
+    messagebox.showinfo("Success", f"Template 9 WL finished successfully!")
 
 def handle_template_11_WL(inputs, output_dir, log):
     source_file = inputs["Source 11 WL File"][0]
     destination_file = inputs["Template 11 WL File"][0]
     Template_11_WL(source_file,destination_file)
     log("Template 11 WL done.")
-
+    messagebox.showinfo("Success", f"Template 11 WL finished successfully!")
 
 def handle_template_3_WM(inputs, output_dir, log):
     source_file = inputs["Source 3 WM File"][0]
@@ -142,17 +146,18 @@ def handle_template_3_WM(inputs, output_dir, log):
 
     Migration_to_Template_3_WM(source_file,destination_file,source_sheet,destination_sheet) 
     log("Template 3 WM done.")
-
+    messagebox.showinfo("Success", f"Template 3 WM finished successfully!")
 
 def handle_template_6_WM(inputs, output_dir, log):
-    source_file1 = inputs["Source 6.1 File"][0]
+    source_file1 = inputs["WM_1014100 File"][0]
     zfloan_raw  = inputs["Zfloan_raw File"][0]
-    source_file3 = inputs["Source 6.3 File"][0]
-    source_file4 = inputs["Source 6.4 File"][0]
+    source_file3 = inputs["zfloan 50 File"][0]
+    source_file4 = inputs["zfloan 60 File"][0]
     destination_file = copy_file(inputs["Destination 6 WM File"][0])
 
     Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file)
     log("Template 6 WM done.")
+    messagebox.showinfo("Success", f"Template 6 WM finished successfully!")
 
 
 def handle_template_9_WM(inputs, output_dir, log):
@@ -161,14 +166,14 @@ def handle_template_9_WM(inputs, output_dir, log):
     destination_file = inputs["Destination 9 WM File"][0]
     Template_9_WM (source_file,reference_file,destination_file)
     log("Template 9 WM done.")
-
+    messagebox.showinfo("Success", f"Template 9 WM finished successfully!")
 
 def handle_template_12_WM(inputs, output_dir, log):
     destination_file = copy_file(inputs["Destination 12 WM File"][0])
 
     Migration_to_template_12_WM(destination_file)
     log("Template 12 WM done.")
-
+    messagebox.showinfo("Success", f"Template 12 WM finished successfully!")
 
 # --- Function Definitions ---
 
@@ -200,8 +205,9 @@ FUNCTIONS = {
 
     "Template 3 WL": {
         "inputs": {
-            "Source File": {"multiple": False},
-            "Template 3": {"multiple": False}
+            "ZBFMM": {"multiple": False},
+            "wl_zbicust": {"multiple": False},
+            "Template 3": {"multiple": False},
         },
         "handler": handle_template_3_WL
     },
@@ -238,9 +244,9 @@ FUNCTIONS = {
     },
     "Template 6 WM": {
         "inputs": {
-            "Source 6.1 File": {"multiple": False},
-            "Source 6.3 File": {"multiple": False},
-            "Source 6.4 File": {"multiple": False},
+            "WM_1014100 File": {"multiple": False},
+            "zfloan 50 File": {"multiple": False},
+            "zfloan 60 File": {"multiple": False},
             "Zfloan_raw File": {"multiple": False},
             "Destination 6 WM File": {"multiple": False},
         },

@@ -8,7 +8,7 @@ from function.ColumnMappingFunction import map_excel_columns
 import function.Function_count_group_Wl7.transferGroup as tg
 output_file = "Template_7_WL_output.xlsx"
 
-def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file,destination_sheet) :
+def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, aging_file,destination_sheet) :
 
     # First mapping (Source 1 into Destination)
     mapped_df1 = map_excel_columns(
@@ -108,7 +108,11 @@ def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source
     final_df['เช็ค AC-AQ'] = final_df['installment_amount (G)'] - final_df['เช็ค Diff กับช่อง AC']
     final_df['เช็ค Diff กับช่อง AC.1'] = final_df['net_principal (H)']+final_df['vat_installment_amount_issue']+final_df['deferred_interest_issue']
     final_df['เช็ค AC-AS'] = final_df['installment_amount (G)']-final_df['เช็ค Diff กับช่อง AC.1']
-
+    # add  more requirement
+    final_df['ภาษีเช่าซื้อทั้งหมด'] = final_df['net_installment_amount']*(7/100)
+    final_df['ตรวจ_diff_ภาษีซื้อ'] = final_df['vat_installment_amount (J)'] -  final_df['ภาษีเช่าซื้อทั้งหมด']
+    
+    "final_df['ภาษีรอตัด'] = final_df['vat_installment_amount (J)'] - "
 
     final_df.to_excel(
         output_file,

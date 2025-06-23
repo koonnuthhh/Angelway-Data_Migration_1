@@ -51,7 +51,7 @@ def Migration_to_template_1_3_2_3(
     )
 
     # 4. Extract location data from Template 2
-    df_location = process_address_file(template_2_path, address_column)
+    df_location = process_address_file(template_2_path, address_column,worksheet="Template2")
 
     column_location_map = {
         'ตำบล': 'ตำบล',
