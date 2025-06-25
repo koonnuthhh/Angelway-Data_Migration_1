@@ -2,13 +2,14 @@ import pandas as pd
 import os
 import sys
 import function.change_Branchcode7_9.branchcode_change as bc
-# from transferGroup import transfer_Group
+import xlrd
+from Migration_to_Template_9_WL import dowload_df
 from openpyxl import load_workbook
 from function.ColumnMappingFunction import map_excel_columns 
 import function.Function_count_group_Wl7.transferGroup as tg
 output_file = "Template_7_WL_output.xlsx"
 
-def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, aging_file,destination_sheet) :
+def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, Template_9_file, aging_file,destination_sheet) :
 
     # First mapping (Source 1 into Destination)
     mapped_df1 = map_excel_columns(
@@ -112,11 +113,107 @@ def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source
     final_df['ภาษีเช่าซื้อทั้งหมด'] = final_df['net_installment_amount']*(7/100)
     final_df['ตรวจ_diff_ภาษีซื้อ'] = final_df['vat_installment_amount (J)'] -  final_df['ภาษีเช่าซื้อทั้งหมด']
     
-    "final_df['ภาษีรอตัด'] = final_df['vat_installment_amount (J)'] - "
+    # dowload template 11 and aging file
+    wb = load_workbook(Template_11_file, data_only=True)
+    # ระบุชื่อ Sheet (หรือใช้ sheet แรก)
+    sheet = wb.active  # หรือ wb['ชื่อชีต']
+    # ดึงข้อมูลใน Sheet
+    data = list(sheet.values)
+    # แยก header กับ data
+    header = data[0]
+    rows = data[1:]
+    # แปลงเป็น DataFrame
+    Template_11_df = pd.DataFrame(rows, columns=header)
+    
+    
+    
+    wb = load_workbook(Template_9_file, data_only=True)
 
+    # ระบุชื่อ Sheet (หรือใช้ sheet แรก)
+    sheet = wb.active  # หรือ wb['ชื่อชีต']
+
+    # ดึงข้อมูลใน Sheet
+    data = list(sheet.values)
+
+    # แยก header กับ data
+    header = data[0]
+    rows = data[1:]
+
+    # แปลงเป็น DataFrame
+    Template_9_df = pd.DataFrame(rows, columns=header)
+    
+    #ลบ column ที่มีชื่อซ้ำ
+    Template_9_df = Template_9_df.loc[:, ~Template_9_df.columns.duplicated()]
+    print("Dowload template 9 success!!")
+    
+    
+
+    Aging_df = dowload_df(aging_file)
+    
+    
+    # Merge the two DataFrames on 'cont_no'
+    vat_payment_sum = Template_11_df.groupby('cont_no')['vat_payment'].sum()
+    
+    unique_template_11 = Template_11_df.drop_duplicates(subset=['cont_no']).copy()
+    
+    unique_template_11['vat_payment'] = unique_template_11['cont_no'].map(vat_payment_sum)
+    
+    merged_df = pd.merge(final_df, unique_template_11[['cont_no', 'vat_payment']], on='cont_no', how='inner')
+    
+    
+
+    # Apply the logic only to the merged DataFrame
+    merged_df['ภาษีรอตัด'] = merged_df['vat_installment_amount (J)'] - merged_df['vat_payment']
+    
+    filtered = Template_9_df[Template_9_df['payfor_code'] != 1001]
+    
+    # คำนวณผลรวม payment ของแต่ละ cont_no ใน filtered (จะได้ Series ที่ index เป็น cont_no)
+    payment_sum = filtered.groupby('cont_no')['payment'].sum()
+
+    # จากนั้นเอาไปแมปใน Template_9_df หรือใช้ merge
+    unique_template_9 = Template_9_df.drop_duplicates(subset=['cont_no']).copy()
+
+    # แมปผลรวมลงใน unique_template_9
+    unique_template_9['payment_sum'] = unique_template_9['cont_no'].map(payment_sum)
+
+    #sprint(unique_template_9[['cont_no', 'payment_sum']])
+    
+    
+    
+    
+    remaining_debt = final_df.merge(unique_template_9[['cont_no', 'payment_sum']], on='cont_no')
+    remaining_debt['มูลหนี้คงเหลือ'] = remaining_debt['installment_amount (G)'] - remaining_debt['payment_sum']
+    
+    # remaining_debt.to_excel(   
+    #     r'remaining_debt.xlsx',
+    #     index=False,
+    # )
+
+    final_df = pd.merge(final_df, merged_df[['cont_no', 'ภาษีรอตัด']], on='cont_no', how='left')
+    final_df = pd.merge(final_df, remaining_debt[['cont_no', 'มูลหนี้คงเหลือ']], on='cont_no', how='left')
+    final_df = pd.merge(final_df, Aging_df[['เลขที่สัญญา', ' ผลรวมรายการเปิ']], left_on='cont_no', right_on='เลขที่สัญญา', how='left')
+    final_df.drop(columns=['เลขที่สัญญา'], inplace=True)
+    final_df.rename(columns={' ผลรวมรายการเปิ': 'มูลหนี้คงเหลือตาม_Aging'}, inplace=True)
+    final_df['เช็ค_diff_มูลหนี้คงเหลือ'] = final_df['มูลหนี้คงเหลือ'] - final_df['มูลหนี้คงเหลือตาม_Aging']
+    
+    
+    
+    
+    print("saving file...")
     final_df.to_excel(
         output_file,
         index=False,
         sheet_name="ข้อมูลสัญญาเชื้อ"
     )
 
+
+# source_file_1 = "D:/Angelway/Migration to python/File_testing/WL_test/Tem.7/wl_zbfamt_04.2025(Temp7.1).XLSX"
+# source_sheet_1 = "Sheet1"
+# source_file_2 = "D:/Angelway/Migration to python/File_testing/WL_test/Tem.7/wl_zbfamt2_04.2025 (Temp7.2).XLSX"
+# source_sheet_2 = "Sheet1"
+# destination_file = "D:/Angelway/Migration to python/File_testing/WL_test/Tem.7/7-ข้อมูลสัญญาเช่าซื้อ.xlsx"
+# Template_11_file = "D:/Angelway/Migration to python/MigrationFunction/Angelway-Data_Migration_1/Template_11_WL_output.xlsx"
+# Template_9_file = "D:/Angelway/Migration to python/MigrationFunction/Angelway-Data_Migration_1/Template_9_WL_output.xlsx"
+# aging_file = "D:/Angelway/Migration to python/File_testing/WL_test/Tem.7/Aging_04.2025.xls"
+# destination_sheet = "ข้อมูลสัญญาเชื้อ"
+# Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, Template_9_file, aging_file,destination_sheet)

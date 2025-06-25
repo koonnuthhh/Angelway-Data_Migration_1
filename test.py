@@ -118,14 +118,18 @@ def handle_template_7_WL(inputs, output_dir, log):
     source_sheet_2 = "Sheet1"
     destination_file = inputs["Template 7 File"][0]
     destination_sheet = "ข้อมูลสัญญาเชื้อ"
-
-    Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file,destination_sheet)
+    Template_11_file = inputs["Template 11 File"][0]
+    Template_9_file = inputs["Template 9 File"][0]
+    aging_file = inputs["Aging File"][0]
+    
+    
+    Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, Template_9_file, aging_file,destination_sheet)
     log("Template 7 WL done.")
     messagebox.showinfo("Success", f"Template 7 WL finished successfully!")
 
 def handle_template_9_WL(inputs, output_dir, log):
     source_file = inputs["Source 9 File"][0]
-    b_zad_path = inputs["B_Zad File"][0]
+    b_zad_path = inputs["BSAD File"][0]
     destination_file = inputs["Template 9 File"][0]
     Template_9_WL(source_file,b_zad_path,destination_file)
     log("Template 9 WL done.")
@@ -153,9 +157,11 @@ def handle_template_6_WM(inputs, output_dir, log):
     zfloan_raw  = inputs["Zfloan_raw File"][0]
     source_file3 = inputs["zfloan 50 File"][0]
     source_file4 = inputs["zfloan 60 File"][0]
+    Temp9_File = inputs["Template 9 File"][0]
+    Aging_File = inputs["Aging File"][0]
     destination_file = copy_file(inputs["Destination 6 WM File"][0])
 
-    Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file)
+    Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_File,Aging_File,destination_file)
     log("Template 6 WM done.")
     messagebox.showinfo("Success", f"Template 6 WM finished successfully!")
 
@@ -216,13 +222,16 @@ FUNCTIONS = {
             "Source 7.1 File": {"multiple": False},
             "Source 7.2 File": {"multiple": False},
             "Template 7 File": {"multiple": False},
+            "Template 11 File": {"multiple": False},
+            "Template 9 File": {"multiple": False},
+            "Aging File": {"multiple": False},
         },
         "handler": handle_template_7_WL
     },
     "Template 9 WL": {
         "inputs": {
           "Source 9 File": {"multiple": False},
-          "B_Zad File": {"multiple": False},
+          "BSAD File": {"multiple": False},
           "Template 9 File": {"multiple": False},
         },
         "handler": handle_template_9_WL
@@ -248,6 +257,8 @@ FUNCTIONS = {
             "zfloan 50 File": {"multiple": False},
             "zfloan 60 File": {"multiple": False},
             "Zfloan_raw File": {"multiple": False},
+            "Template 9 File": {"multiple": False},
+            "Aging File": {"multiple": False},
             "Destination 6 WM File": {"multiple": False},
         },
         "handler": handle_template_6_WM

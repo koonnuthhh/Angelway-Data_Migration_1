@@ -3,11 +3,12 @@ import numpy as np
 import os
 import sys
 from function.WM_clean_zfloan20 import WM_clean_zfloan20
-
+import xlrd
+from Migration_to_Template_9_WL import dowload_df
 output_file = "6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก_result.xlsx"
 
 
-def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,destination_file) :
+def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_File,Aging_file,destination_file) :
     import pandas as pd
     #Clean zfloan20 first
     WM_clean_zfloan20(zfloan_raw)
@@ -193,12 +194,12 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
     source_file = merged_df
 
     # Change this to the actual name
-    df_template = pd.read_excel(destination_file, sheet_name=target_sheet)
+    df_final = pd.read_excel(destination_file, sheet_name=target_sheet)
 
-    # Step 1: Expand df_template to match the number of rows in source_file
-    if df_template.empty:
-        df_template = pd.DataFrame(columns=df_template.columns)  # keep column names
-        df_template = df_template.reindex(index=range(len(source_file)))  # add blank rows
+    # Step 1: Expand df_final to match the number of rows in source_file
+    if df_final.empty:
+        df_final = pd.DataFrame(columns=df_final.columns)  # keep column names
+        df_final = df_final.reindex(index=range(len(source_file)))  # add blank rows
         
     column_mapping = {
     'เลขที่สัญญา': 'cont_no',
@@ -232,14 +233,46 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
 
     # Step 2: Copy over mapped data
     for src_col, dest_col in column_mapping.items():
-        if src_col in source_file.columns and dest_col in df_template.columns:
-            df_template[dest_col] = source_file[src_col].values  # row-wise copy
+        if src_col in source_file.columns and dest_col in df_final.columns:
+            df_final[dest_col] = source_file[src_col].values  # row-wise copy
+            
+    #load temp9
+    Template_9_df = pd.read_excel(Temp9_File)
+    print("Load template 9 success")
+    
+    
+    Aging_df = dowload_df(Aging_file)
+    print("Load Aging success. Process check column...")
+    
+    filtered = Template_9_df[Template_9_df['payfor_code'] == 1001]
+    
+    # คำนวณผลรวม payment ของแต่ละ cont_no ใน filtered (จะได้ Series ที่ index เป็น cont_no)
+    principal_paid = filtered.groupby('cont_no')['principal_paid'].sum()
 
-    # Load workbook
-    book = load_workbook(destination_file)
+    # จากนั้นเอาไปแมปใน Template_9_df หรือใช้ merge
+    unique_template_9 = Template_9_df.drop_duplicates(subset=['cont_no']).copy()
+
+    # แมปผลรวมลงใน unique_template_9
+    unique_template_9['principal_paid_sum'] = unique_template_9['cont_no'].map(principal_paid)
+    
+    df_final['มูลหนี้คงเหลือ'] = unique_template_9['principal_paid_sum'] - df_final['principal']
+    df_final['มูลหนี้คงเหลือตาม_Aging'] = Aging_df[' ผลรวมรายการเปิ']
+    df_final['ตรวจ_diff_มูลหนี้คงเหลือ'] = df_final['มูลหนี้คงเหลือ'] - df_final['มูลหนี้คงเหลือตาม_Aging']
+    
+    
 
     # Create a Pandas ExcelWriter using the openpyxl engine
     with pd.ExcelWriter(output_file , engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
         # No need to assign writer.book anymore
-        df_template.to_excel(writer, sheet_name=target_sheet, index=False)
+        df_final.to_excel(writer, sheet_name=target_sheet, index=False)
         
+        
+        
+# source_file1 = r"D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\WM_1014100 - 1014108_04.2025.xls"
+# zfloan_raw = r"D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan20_04.2025 ไฟล์ดิบ.txt"
+# source_file3 = r"D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan50_04.2025.XLSX"
+# source_file4 = r"D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\zfloan 60 04.2025.xlsx"
+# Temp9_File = r"D:\Angelway\Migration to python\MigrationFunction\Angelway-Data_Migration_1\Template_9_WM_output.xlsx"
+# Aging_File = r"D:\Angelway\Migration to python\File_testing\WL_test\Tem.7\Aging_04.2025.xls"
+# destination_file = r"D:\Angelway\Migration to python\File_testing\WM_test\Tem.6_WM\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
+# Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_File,Aging_File,destination_file)
