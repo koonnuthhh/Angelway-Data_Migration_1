@@ -34,7 +34,7 @@ def WM_clean_zfloan20(rawfile) :
     cleaned_data[cleaned_data['Clrng doc.'].notna()][['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']]
     cleaned_data[['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']].isnull().sum()
 
-    cleaned_data.to_excel(r"../WM_Temp6_cleaned.xlsx", index=False)
+    cleaned_data.to_excel(r"WM_Temp6_cleaned.xlsx", index=False)
     print("Exported to WM_Temp6_cleaned.xlsx")
 
     # Remove commas and convert to float
@@ -53,7 +53,7 @@ def WM_clean_zfloan20(rawfile) :
 
     print(cleaned_dataV2)
 
-    cleaned_dataV2.to_excel(r"../WM_Temp6_cleanedV2.xlsx", index=False)
+    cleaned_dataV2.to_excel(r"WM_Temp6_cleanedV2.xlsx", index=False)
     print("Exported to WM_Temp6_cleanedV2.xlsx")
 
     # Remove commas and convert to float

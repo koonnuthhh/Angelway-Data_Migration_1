@@ -262,7 +262,11 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
     
 
     # Create a Pandas ExcelWriter using the openpyxl engine
-    with pd.ExcelWriter(output_file , engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+    if os.path.exists(output_file):
+        writer_mode = 'a'
+    else:
+        writer_mode = 'w'
+    with pd.ExcelWriter(output_file, engine='openpyxl', mode=writer_mode, if_sheet_exists='replace') as writer:
         # No need to assign writer.book anymore
         df_final.to_excel(writer, sheet_name=target_sheet, index=False)
         

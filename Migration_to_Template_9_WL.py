@@ -9,17 +9,17 @@ from function import transfer_branchcode as transfer_branchcode
 
 output_file = "Template_9_WL_output.xlsx"
 
-def dowload_df(sourcepath):
+def dowload_df(sourcepath, sheet_index=1):
    try:
-      dowload_file = pd.read_excel(sourcepath)
+      dowload_file = pd.read_excel(sourcepath, sheet_name=sheet_index)
       return dowload_file
    except Exception as e:
       print(f"The format is not xlsx.\n Changing read method to xls...")
       try:
          # เปิด workbook
          workbook = xlrd.open_workbook(sourcepath)
-         # เลือก sheet ที่ต้องการ (เช่น sheet แรก)
-         sheet = workbook.sheet_by_index(1)
+         # เลือก sheet ที่ต้องการ
+         sheet = workbook.sheet_by_index(sheet_index)
          #อ่าน header
          headers = sheet.row_values(0)
          # อ่านข้อมูลที่เหลือ
