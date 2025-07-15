@@ -125,8 +125,16 @@ def main_location(filepath):
     df.loc[amphoe_extracted.notna(), 'อำเภอ'] = amphoe_extracted.dropna()
     df['ตำบล'] = df['ตำบล'].str.replace(r'(?:อ\.|อำเภอ)\s*\S.+', '', regex=True).str.replace(r'^(?:ต\.|ตำบล|ต)\s*', '', regex=True).str.strip()
     df['อำเภอ'] = df['อำเภอ'].str.replace(r'กิ่ง\s*(อ\.|อำเภอ|อ)\s*', 'อำเภอ', regex=True)
+    
+    
+    # ✅ ใช้ apply แล้วเก็บผลลัพธ์ไว้ก่อน
+    location_results = df.apply(lambda row: extract_province_from_amphoe(row, province_set), axis=1)  # <- ใช้ tolist() เพราะแต่ละแถวเป็น dict
 
-    df[['อำเภอ', 'จังหวัด']] = df.apply(lambda row: extract_province_from_amphoe(row, province_set), axis=1,result_type='expand')
+    # ✅ ตรวจสอบว่ามีทั้ง 2 คอลัมน์
+    assert set(['อำเภอ', 'จังหวัด']).issubset(location_results.columns), "Missing expected columns in output!"
+
+
+    df[['อำเภอ', 'จังหวัด']] = location_results[['อำเภอ', 'จังหวัด']]
 
     if "ผลการตรวจสอบ" not in df.columns:
         df["ผลการตรวจสอบ"] = ""
