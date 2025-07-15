@@ -6,34 +6,9 @@ import xlrd
 from function.ColumnMappingFunction import map_excel_columns 
 from function.replace_text_in_column import replace_text_in_column
 from function import transfer_branchcode as transfer_branchcode
+from function.dowload_to_pandas import dowload_df
 
 output_file = "Template_9_WL_output.xlsx"
-
-def dowload_df(sourcepath, sheet_index=1):
-   try:
-      dowload_file = pd.read_excel(sourcepath, sheet_name=sheet_index)
-      return dowload_file
-   except Exception as e:
-      print(f"The format is not xlsx.\n Changing read method to xls...")
-      try:
-         # เปิด workbook
-         workbook = xlrd.open_workbook(sourcepath)
-         # เลือก sheet ที่ต้องการ
-         sheet = workbook.sheet_by_index(sheet_index)
-         #อ่าน header
-         headers = sheet.row_values(0)
-         # อ่านข้อมูลที่เหลือ
-         data = [sheet.row_values(row_idx) for row_idx in range(1, sheet.nrows)]
-         # สร้าง DataFrame
-         print("Dowload {sourcepath} success!!")
-         
-         return pd.DataFrame(data, columns=headers)
-      except Exception as e:
-         print(f"The format is not xls as well.\n Changing read method to csv(txt)...")
-         df = pd.read_csv(sourcepath, delimiter='\t',  encoding='cp874')
-         print("Dowload {sourcepath} success!!")
-         return df
-      
       
       
       
@@ -57,7 +32,7 @@ def Template_9_WL(source_file,b_zad_path,destination_file):
 
  template_df = map_excel_columns(source_file,destination_file,source_sheet,destination_sheet,column_mapping)
  
- bzad_pd = dowload_df(b_zad_path)
+ bzad_pd = dowload_df(b_zad_path,sheet_index=0)
  print("Dowload Bzad success")
  template_df['cont_type'] = 'H'
  template_df['effective_date'] = template_df['effective_date'].fillna(template_df['payment_date'])
@@ -91,4 +66,4 @@ def Template_9_WL(source_file,b_zad_path,destination_file):
  print('🎉 Save success!')
 
 
-# Template_9_WL(source_file = r"D:/Angelway/Migration to python/File_testing/WL_test/Tem.9/ZHP_PAYMENT.XLSX" ,b_zad_path = r"D:/Angelway/Migration to python/File_testing/WL_test/Tem.9/BSAD_WL.xlsx",destination_file = r"D:/Angelway/Migration to python/File_testing/WL_test/Tem.9/9-ข้อมูลการรับชำระ.xlsx")
+#Template_9_WL(source_file = r"D:\Angelway\Migration to python\File_testing\WL_test\Tem.9\zhp_payment_new.xlsx" ,b_zad_path = r"D:\Angelway\Migration to python\File_testing\WL_test\Tem.9\BSAD_WL.xlsx",destination_file = r"D:/Angelway/Migration to python/File_testing/WL_test/Tem.9/9-ข้อมูลการรับชำระ.xlsx")

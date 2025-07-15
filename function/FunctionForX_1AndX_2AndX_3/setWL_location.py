@@ -37,14 +37,14 @@ def normalize_district_name(name, province_name):
 
 # === Province Extractor ===
 def extract_province_from_amphoe(row, province_set):
-    amphoe = str(row['อำเภอ']).strip()
+    amphoe = str(row.get('อำเภอ', '')).strip()
     amphoe_cleaned = re.sub(r'^(อ\.|อำเภอ|อ)\s*', '', amphoe).strip()
     amphoe_cleaned = re.sub(r'^(จ\.|จ)\s*', '', amphoe_cleaned).strip()
 
     if amphoe_cleaned in province_set:
         return pd.Series({'อำเภอ': '-', 'จังหวัด': amphoe_cleaned})
     else:
-        return pd.Series({'อำเภอ': amphoe_cleaned, 'จังหวัด': row['จังหวัด']})
+        return pd.Series({'อำเภอ': amphoe_cleaned, 'จังหวัด': row.get('จังหวัด', '')})
 
 
 # === Zipcode Checker ===
@@ -102,9 +102,9 @@ def main_location(filepath):
     PROVINCE_LIST, DISTRICT_LIST, SUB_DISTRICT_LIST = load_reference_data()
     ref_data = (PROVINCE_LIST, DISTRICT_LIST, SUB_DISTRICT_LIST)
     province_set = set([p["v"] for p in PROVINCE_LIST])
-    df_preview = pd.read_excel(filepath, nrows=0)
-    print(df_preview.columns)
-    df = pd.read_excel(filepath, usecols="K,R,S,T,U,V,W,X")
+    df = pd.read_excel(filepath, nrows=0)
+    #print(df_preview.columns)
+    #df = pd.read_excel(filepath, usecols="K,R,S,T,U,V,W,X")
     df['รหัสลูกค้า'] = df['รหัสลูกค้า'].apply(lambda x: str(int(float(x))) if pd.notnull(x) else '')
     df['รหัส ปณ.'] = df['รหัส ปณ.'].apply(lambda x: str(int(float(x))) if pd.notnull(x) else '')
     df = df[~(df['รหัสลูกค้า'].isna() | (df['รหัสลูกค้า'].str.strip() == ''))]
@@ -126,7 +126,7 @@ def main_location(filepath):
     df['ตำบล'] = df['ตำบล'].str.replace(r'(?:อ\.|อำเภอ)\s*\S.+', '', regex=True).str.replace(r'^(?:ต\.|ตำบล|ต)\s*', '', regex=True).str.strip()
     df['อำเภอ'] = df['อำเภอ'].str.replace(r'กิ่ง\s*(อ\.|อำเภอ|อ)\s*', 'อำเภอ', regex=True)
 
-    df[['อำเภอ', 'จังหวัด']] = df.apply(lambda row: extract_province_from_amphoe(row, province_set), axis=1)
+    df[['อำเภอ', 'จังหวัด']] = df.apply(lambda row: extract_province_from_amphoe(row, province_set), axis=1,result_type='expand')
 
     if "ผลการตรวจสอบ" not in df.columns:
         df["ผลการตรวจสอบ"] = ""

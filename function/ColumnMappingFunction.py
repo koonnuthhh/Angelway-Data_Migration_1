@@ -1,6 +1,8 @@
 import pandas as pd
 from openpyxl import load_workbook
 
+from function.dowload_to_pandas import dowload_df_filename
+
 def map_excel_columns(
     source_file: str,
     destination_file: str,
@@ -17,26 +19,27 @@ def map_excel_columns(
     try:
         print(f"📖 Reading source file: {source_file} (Sheet: {source_sheet})")
 
-        # Use openpyxl to read actual headers from source
-        wb = load_workbook(source_file, data_only=True)
-        ws = wb[source_sheet]
-        header_row_cells = ws[source_header_row + 1]  # openpyxl is 1-based
-        source_headers = [cell.value if cell.value is not None else f"Unnamed: {i}" 
-                          for i, cell in enumerate(header_row_cells)]
+        # # Use openpyxl to read actual headers from source
+        # wb = load_workbook(source_file, data_only=True)
+        # ws = wb[source_sheet]
+        # header_row_cells = ws[source_header_row + 1]  # openpyxl is 1-based
+        # source_headers = [cell.value if cell.value is not None else f"Unnamed: {i}" 
+        #                   for i, cell in enumerate(header_row_cells)]
 
-        # Read source DataFrame
-        source_df = pd.read_excel(
-            source_file, 
-            sheet_name=source_sheet, 
-            header=None, 
-            skiprows=source_header_row + 1,  
-            engine='openpyxl'
-        )
-        source_df.columns = source_headers
-        source_df.columns = source_df.columns.astype(str).str.strip()
+        # # Read source DataFrame
+        # source_df = pd.read_excel(
+        #     source_file, 
+        #     sheet_name=source_sheet, 
+        #     header=None, 
+        #     skiprows=source_header_row + 1,  
+        #     engine='openpyxl'
+        # )
+        # source_df.columns = source_headers
+        # source_df.columns = source_df.columns.astype(str).str.strip()
 
-        print(f"📖 Reading destination template headers from: {destination_file} (Sheet: {destination_sheet})")
-
+        # print(f"📖 Reading destination template headers from: {destination_file} (Sheet: {destination_sheet})")
+        source_df = dowload_df_filename(source_file, source_sheet)
+        
         destination_df = pd.read_excel(
             destination_file, 
             sheet_name=destination_sheet, 
@@ -44,14 +47,14 @@ def map_excel_columns(
             engine='openpyxl'
         )
         destination_columns = destination_df.columns.astype(str).str.strip()
-
         # Create new DataFrame for mapped data with destination template headers
-        new_df = pd.DataFrame(columns=destination_columns)
+        new_df = pd.DataFrame(index=source_df.index, columns=destination_columns)
 
         for src_col, dest_cols in column_mapping.items():
             # Allow dest_cols to be a list or a single value
             if not isinstance(dest_cols, list):
                 dest_cols = [dest_cols]
+        
 
             if src_col in source_df.columns:
                 for dest_col in dest_cols:

@@ -15,10 +15,12 @@ def start(df, Transfer):
     # สร้าง branch_code ใน Transfer
     Transfer['branch_code'] = (Transfer['Clrng doc.'].astype(str)
         + pd.to_datetime(Transfer['การหักล้าง'], errors='coerce').dt.year.astype(str))
+    print(Transfer['branch_code'])
 
     # สร้าง branch_code ใน df (สมมุติ df มี 'branch_code' กับ 'payment_no')
     df['branch_code'] = df['payment_no'].astype(str) + df['branch_code'].astype(str)
     df['payment_no_with_year'] = df['branch_code']
+    
     # Merge หารหัสเซกชัน (อันนี้คือ first mapping)
     merged = df.merge(
         Transfer[['branch_code', 'รหัสเซกชัน']],
