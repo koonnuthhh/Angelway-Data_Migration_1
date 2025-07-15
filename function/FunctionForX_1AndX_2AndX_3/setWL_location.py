@@ -102,7 +102,7 @@ def main_location(filepath):
     PROVINCE_LIST, DISTRICT_LIST, SUB_DISTRICT_LIST = load_reference_data()
     ref_data = (PROVINCE_LIST, DISTRICT_LIST, SUB_DISTRICT_LIST)
     province_set = set([p["v"] for p in PROVINCE_LIST])
-    df = pd.read_excel(filepath, nrows=0)
+    df = pd.read_excel(filepath)
     #print(df_preview.columns)
     #df = pd.read_excel(filepath, usecols="K,R,S,T,U,V,W,X")
     df['รหัสลูกค้า'] = df['รหัสลูกค้า'].apply(lambda x: str(int(float(x))) if pd.notnull(x) else '')
@@ -128,7 +128,7 @@ def main_location(filepath):
     
     
     # ✅ ใช้ apply แล้วเก็บผลลัพธ์ไว้ก่อน
-    location_results = df.apply(lambda row: extract_province_from_amphoe(row, province_set), axis=1)  # <- ใช้ tolist() เพราะแต่ละแถวเป็น dict
+    location_results = df.apply(lambda row: extract_province_from_amphoe(row, province_set), axis=1) 
 
     # ✅ ตรวจสอบว่ามีทั้ง 2 คอลัมน์
     assert set(['อำเภอ', 'จังหวัด']).issubset(location_results.columns), "Missing expected columns in output!"
