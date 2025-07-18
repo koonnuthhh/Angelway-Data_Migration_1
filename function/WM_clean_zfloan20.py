@@ -1,9 +1,10 @@
 import pandas as pd
+from Migration_to_Template_9_WL import dowload_df
 
 def WM_clean_zfloan20(rawfile) :
     #"zfloan20_04.2025 ไฟล์ดิบ.txt"
     # Read Excel file - the warning doesnt afect work
-    df = pd.read_csv(rawfile, delimiter='\t',  encoding='cp874')
+    df = dowload_df(rawfile,sheet_index=0)
     df['การหักล้าง'] = pd.to_datetime(df['การหักล้าง'], errors='coerce')
     doc_col = 'เลขเอกสาร'
     df[['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']].isnull().sum()
@@ -21,7 +22,7 @@ def WM_clean_zfloan20(rawfile) :
         # Step 4: Apply your year/month filter on 'การหักล้าง1':
         # Keep rows where year > 2025 OR (year == 2025 AND month > 4)
         mask = (doc_has_value['การหักล้าง'].dt.year > 2025) | \
-            ((doc_has_value['การหักล้าง'].dt.year == 2025) & (doc_has_value['การหักล้าง'].dt.month > 4))
+            ((doc_has_value['การหักล้าง'].dt.year == 2025) & (doc_has_value['การหักล้าง'].dt.month > 5))
 
         doc_has_value = doc_has_value[mask]
 

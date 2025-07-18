@@ -14,7 +14,7 @@ output_file = "Template_9_WL_output.xlsx"
       
       
    
-def Template_9_WL(source_file,b_zad_path,destination_file):
+def Template_9_WL(source_file,b_zad_path,b_zad2_path,destination_file):
  source_sheet = "Sheet1"
  destination_sheet = "ข้อมูลการรับชำระ"
 
@@ -33,6 +33,10 @@ def Template_9_WL(source_file,b_zad_path,destination_file):
  template_df = map_excel_columns(source_file,destination_file,source_sheet,destination_sheet,column_mapping)
  
  bzad_pd = dowload_df(b_zad_path,sheet_index=0)
+ bzad2_pd = dowload_df(b_zad2_path,sheet_index=0)
+ 
+ bzad_combined = pd.concat([bzad_pd, bzad2_pd], ignore_index=True)
+ 
  print("Dowload Bzad success")
  template_df['cont_type'] = 'H'
  template_df['effective_date'] = template_df['effective_date'].fillna(template_df['payment_date'])
@@ -58,9 +62,10 @@ def Template_9_WL(source_file,b_zad_path,destination_file):
  '4': '2009',
  '' : ''
  })
- payment_df=transfer_branchcode.start(template_df,bzad_pd)
+ payment_df=transfer_branchcode.start(template_df,bzad_combined)
  template_df.rename(columns={'cont_no.1': 'cont_no'}, inplace=True)
  template_df['Ref_payment'] = payment_df['payment_no_with_year']
+ template_df['Ref.'] = payment_df['payment_no_with_year']
  template_df['branch_code'] = payment_df['branch_code']
  template_df.to_excel(output_file, index=False)
  print('🎉 Save success!')

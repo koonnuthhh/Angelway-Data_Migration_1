@@ -182,4 +182,4 @@ def Migration_to_template_1_1_2_1(
 #    template_2_sheet="..."
 #)
 
-Migration_to_template_1_1_2_1(r"C:\Users\Asus\Downloads\zbicust.xlsx","Sheet1",r"D:\Angelway\Migration to python\MigrationFunction\Angelway-Data_Migration_1\Template 1.1 - WL_result.xlsx","Template1_WL", r"D:\Angelway\Migration to python\MigrationFunction\Angelway-Data_Migration_1\Template 2.1 - WL_result.xlsx","Template2_WL")
+#Migration_to_template_1_1_2_1(r"C:\Users\Asus\Downloads\zbicust.xlsx","Sheet1",r"D:\Angelway\Migration to python\MigrationFunction\Angelway-Data_Migration_1\Template 1.1 - WL_result.xlsx","Template1_WL", r"D:\Angelway\Migration to python\MigrationFunction\Angelway-Data_Migration_1\Template 2.1 - WL_result.xlsx","Template2_WL")

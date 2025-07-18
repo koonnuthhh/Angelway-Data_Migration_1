@@ -129,9 +129,10 @@ def handle_template_7_WL(inputs, output_dir, log):
 
 def handle_template_9_WL(inputs, output_dir, log):
     source_file = inputs["Source 9 File"][0]
-    b_zad_path = inputs["BSAD File"][0]
+    bzad_path = inputs["BSAD File"][0]
+    bsad2_path = inputs["BSAD2 File"][0]
     destination_file = inputs["Template 9 File"][0]
-    Template_9_WL(source_file,b_zad_path,destination_file)
+    Template_9_WL(source_file,bzad_path,bsad2_path,destination_file)
     log("Template 9 WL done.")
     messagebox.showinfo("Success", f"Template 9 WL finished successfully!")
 
@@ -232,6 +233,7 @@ FUNCTIONS = {
         "inputs": {
           "Source 9 File": {"multiple": False},
           "BSAD File": {"multiple": False},
+          "BSAD2 File": {"multiple": False},
           "Template 9 File": {"multiple": False},
         },
         "handler": handle_template_9_WL
