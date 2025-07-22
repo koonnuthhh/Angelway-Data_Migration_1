@@ -35,6 +35,7 @@ def Template_9_WL(source_file,b_zad_path,b_zad2_path,destination_file):
  bzad_pd = dowload_df(b_zad_path,sheet_index=0)
  bzad2_pd = dowload_df(b_zad2_path,sheet_index=0)
  
+
  bzad_combined = pd.concat([bzad_pd, bzad2_pd], ignore_index=True)
  
  print("Dowload Bzad success")
@@ -62,10 +63,12 @@ def Template_9_WL(source_file,b_zad_path,b_zad2_path,destination_file):
  '4': '2009',
  '' : ''
  })
+ print("bzad_combined columns:", list(bzad_combined.columns))
  payment_df=transfer_branchcode.start(template_df,bzad_combined)
  template_df.rename(columns={'cont_no.1': 'cont_no'}, inplace=True)
  template_df['Ref_payment'] = payment_df['payment_no_with_year']
- template_df['Ref.'] = payment_df['payment_no_with_year']
+ # Ensure 'REF.' column matches 'Ref_payment'
+ template_df['REF.'] = template_df['Ref_payment']
  template_df['branch_code'] = payment_df['branch_code']
  template_df.to_excel(output_file, index=False)
  print('🎉 Save success!')

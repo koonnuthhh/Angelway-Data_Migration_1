@@ -2,30 +2,41 @@ import pandas as pd
 import xlrd
 from openpyxl import load_workbook
 
-def dowload_df(sourcepath, sheet_index=1):
-   try:
-      dowload_file = pd.read_excel(sourcepath, sheet_name=sheet_index)
-      return dowload_file
-   except Exception as e:
-      print(f"The format is not xlsx.\n Changing read method to xls...")
-      try:
-         # เปิด workbook
-         workbook = xlrd.open_workbook(sourcepath)
-         # เลือก sheet ที่ต้องการ
-         sheet = workbook.sheet_by_index(sheet_index)
-         #อ่าน header
-         headers = sheet.row_values(0)
-         # อ่านข้อมูลที่เหลือ
-         data = [sheet.row_values(row_idx) for row_idx in range(1, sheet.nrows)]
-         # สร้าง DataFrame
-         print("Dowload {sourcepath} success!!")
-         
-         return pd.DataFrame(data, columns=headers)
-      except Exception as e:
-         print(f"The format is not xls as well.\n Changing read method to csv(txt)...")
-         df = pd.read_csv(sourcepath, delimiter='\t',  encoding='cp874')
-         print("Dowload {sourcepath} success!!")
-         return df
+def dowload_df(sourcepath, sheet_index=0, header_row=0):
+    from openpyxl import load_workbook
+    import pandas as pd
+
+    try:
+        # Use openpyxl to read the sheet
+        wb = load_workbook(sourcepath, data_only=True)
+        ws = wb.worksheets[sheet_index]
+        data = list(ws.values)
+        header = data[header_row]
+        rows = data[header_row + 1:]
+        df = pd.DataFrame(rows, columns=header)
+        print(f"✅ Download {sourcepath} as XLSX (openpyxl) success!!")
+        return df
+    except Exception as e:
+        print(f"⚠️ openpyxl read failed: {e}\nFallback to pandas/xlrd/csv...")
+        # Fallback to your original logic
+        try:
+            dowload_file = pd.read_excel(sourcepath, sheet_name=sheet_index)
+            return dowload_file
+        except Exception as e:
+            print(f"The format is not xlsx.\n Changing read method to xls...")
+            try:
+                import xlrd
+                workbook = xlrd.open_workbook(sourcepath)
+                sheet = workbook.sheet_by_index(sheet_index)
+                headers = sheet.row_values(0)
+                data = [sheet.row_values(row_idx) for row_idx in range(1, sheet.nrows)]
+                print("Dowload {sourcepath} success!!")
+                return pd.DataFrame(data, columns=headers)
+            except Exception as e:
+                print(f"The format is not xls as well.\n Changing read method to csv(txt)...")
+                df = pd.read_csv(sourcepath, delimiter='\t',  encoding='cp874')
+                print("Dowload {sourcepath} success!!")
+                return df
      
 def dowload_df_filename(sourcepath, sheet_name, source_header_row=0):
     try:

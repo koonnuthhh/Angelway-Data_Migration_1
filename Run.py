@@ -1,6 +1,7 @@
 import sys
 import os
 import openpyxl
+import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from Migration_to_template_1_1_2_1 import Migration_to_template_1_1_2_1
 from Migration_to_template_1_2_2_2 import Migration_to_template_1_2_2_2
@@ -15,6 +16,28 @@ from Migration_to_Template_3_WM import Migration_to_Template_3_WM
 from Migration_to_Template_6_WM import Migration_to_Template_6_WM
 from Migration_to_Template_9_WM import Template_9_WM
 from Migration_to_template_12_WM import Migration_to_template_12_WM
+
+#source_file1= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.6_WM\WM_1014100 - 1014108_04.2025.xls"
+#zfloan_raw= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.6_WM\zfloan20_04.2025 ไฟล์ดิบ.txt"
+#source_file3= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.6_WM\zfloan50_04.2025.XLSX"
+#source_file4= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.6_WM\zfloan 60 04.2025.xlsx"
+#Temp9_file= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.9_WM\Template_9_WM_output.xlsx"
+#Aging_file= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.6_WM\รายละเอียด WM   จากไฟล์ Aging  ทำ Tep 6(1).xlsx"
+#destination_file= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.6_WM\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
+#Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_file,Aging_file,destination_file)
+
+source_file1= r"C:\Users\andre\Desktop\nwWM6\รายละเอียด  ทำ Temp 6.xlsx"
+zfloan_raw= r"C:\Users\andre\Desktop\nwWM6\ZFLOAN20.xlsx"
+source_file3= r"C:\Users\andre\Desktop\nwWM6\zfloan50 06.2025 ใหม่.XLSX"
+source_file4= r"C:\Users\andre\Desktop\nwWM6\ZFLOAN60.xlsx"
+Temp9_file= r"C:\Users\andre\Desktop\nwWM6\Template_9_WM_output_ใหม่.xlsx"
+Aging_file= r"C:\Users\andre\Desktop\nwWM6\รายละเอียด WM   จากไฟล์ Aging  ทำ Tep 6.xlsx"
+destination_file= r"C:\Users\andre\Desktop\nwWM6\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
+Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_file,Aging_file,destination_file)
+
+
+
+
 
 # print(openpyxl.__name__)
 # print(type(openpyxl.__name__))

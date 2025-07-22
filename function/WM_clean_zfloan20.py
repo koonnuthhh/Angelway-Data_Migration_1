@@ -5,6 +5,12 @@ def WM_clean_zfloan20(rawfile) :
     #"zfloan20_04.2025 ไฟล์ดิบ.txt"
     # Read Excel file - the warning doesnt afect work
     df = dowload_df(rawfile,sheet_index=0)
+    # --- Remove duplicate columns and print them for debugging ---
+    dupes = df.columns[df.columns.duplicated()].tolist()
+    if dupes:
+        print("Duplicate columns found and removed:", dupes)
+    df = df.loc[:, ~df.columns.duplicated()]
+    # --- End duplicate column handling ---
     df['การหักล้าง'] = pd.to_datetime(df['การหักล้าง'], errors='coerce')
     doc_col = 'เลขเอกสาร'
     df[['เลขที่สัญญ', 'เลขเอกสาร', 'Clrng doc.', 'การหักล้าง']].isnull().sum()
@@ -38,8 +44,11 @@ def WM_clean_zfloan20(rawfile) :
     cleaned_data.to_excel(r"WM_Temp6_cleaned.xlsx", index=False)
     print("Exported to WM_Temp6_cleaned.xlsx")
 
-    # Remove commas and convert to float
-    cleaned_data['        ดบ.ในงวด'] = cleaned_data['        ดบ.ในงวด'].str.replace(',', '').astype(float)
+    # Remove commas and convert to float for '        ดบ.ในงวด'
+    col = '        ดบ.ในงวด'
+    if col in cleaned_data.columns:
+        cleaned_data[col] = cleaned_data[col].astype(str).str.replace(',', '', regex=False)
+        cleaned_data[col] = pd.to_numeric(cleaned_data[col], errors='coerce')
 
     # Sum the column
     sum_column_a = cleaned_data['        ดบ.ในงวด'].sum()
@@ -57,8 +66,11 @@ def WM_clean_zfloan20(rawfile) :
     cleaned_dataV2.to_excel(r"WM_Temp6_cleanedV2.xlsx", index=False)
     print("Exported to WM_Temp6_cleanedV2.xlsx")
 
-    # Remove commas and convert to float
-    cleaned_dataV2['              เงินต้น'] = cleaned_dataV2['              เงินต้น'].str.replace(',', '').astype(float)
+    # Remove commas and convert to float for '              เงินต้น'
+    col2 = '              เงินต้น'
+    if col2 in cleaned_dataV2.columns:
+        cleaned_dataV2[col2] = cleaned_dataV2[col2].astype(str).str.replace(',', '', regex=False)
+        cleaned_dataV2[col2] = pd.to_numeric(cleaned_dataV2[col2], errors='coerce')
 
     # Sum the column
     sum_column_a = cleaned_dataV2['              เงินต้น'].sum()
