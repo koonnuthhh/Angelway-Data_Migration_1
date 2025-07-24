@@ -15,12 +15,34 @@ def dowload_df(sourcepath, sheet_index=0, header_row=0):
         rows = data[header_row + 1:]
         df = pd.DataFrame(rows, columns=header)
         print(f"✅ Download {sourcepath} as XLSX (openpyxl) success!!")
+        # --- Universal header fallback ---
+        if all(str(col).startswith('Unnamed') or col is None for col in df.columns):
+            print("⚠️ All columns are Unnamed. Trying to auto-detect header row...")
+            # Scan first 10 rows for a row with all non-None values
+            for i in range(min(10, len(data))):
+                row = data[i]
+                if row and all(cell is not None and str(cell).strip() != '' for cell in row):
+                    print(f"✅ Found likely header row at index {i}: {row}")
+                    header = [str(cell).strip() for cell in row]
+                    rows = data[i + 1:]
+                    df = pd.DataFrame(rows, columns=header)
+                    break
         return df
     except Exception as e:
         print(f"⚠️ openpyxl read failed: {e}\nFallback to pandas/xlrd/csv...")
         # Fallback to your original logic
         try:
             dowload_file = pd.read_excel(sourcepath, sheet_name=sheet_index)
+            # --- Universal header fallback for pandas ---
+            if all(str(col).startswith('Unnamed') or col is None for col in dowload_file.columns):
+                print("⚠️ All columns are Unnamed (pandas). Trying to auto-detect header row...")
+                # Try reading first 10 rows to find header
+                preview = pd.read_excel(sourcepath, sheet_name=sheet_index, header=None, nrows=10)
+                for i, row in preview.iterrows():
+                    if all(cell is not None and str(cell).strip() != '' for cell in row):
+                        print(f"✅ Found likely header row at index {i}: {list(row)}")
+                        df = pd.read_excel(sourcepath, sheet_name=sheet_index, header=i)
+                        return df
             return dowload_file
         except Exception as e:
             print(f"The format is not xlsx.\n Changing read method to xls...")

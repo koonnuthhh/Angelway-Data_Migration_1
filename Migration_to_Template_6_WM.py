@@ -99,7 +99,7 @@ def Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4
 
     ## load data
     # --- Read and clean zf60 ---
-    zf60 = pd.read_excel(source_file4, engine="openpyxl")
+    zf60 = dowload_df(source_file4)
     zf60.columns = zf60.columns.str.strip()
     print("zf60 columns:", list(zf60.columns))
     zf60['สถานะสัญญา'].astype
