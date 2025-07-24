@@ -79,6 +79,10 @@ def start(df):
     df['branch_code'] = df['branch_code'].astype(str).str.replace('\.0$', '', regex=True)
     
     # ทำ mapping
-    df['branch_code'] = df['branch_code'].map(mapping_dict).fillna(df['branch_code'])
+    mapped = df['branch_code'].map(mapping_dict)
+    # If mapping fails, set to '0000'
+    df['branch_code'] = mapped.fillna('0000')
+    # If branch_code is empty string or NaN, set to '0000'
+    df['branch_code'] = df['branch_code'].replace(['', 'nan', 'NaN', None, pd.NA], '0000')
     return df
 
