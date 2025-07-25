@@ -44,14 +44,14 @@ def WM_clean_zfloan20(rawfile) :
     cleaned_data.to_excel(r"WM_Temp6_cleaned.xlsx", index=False)
     print("Exported to WM_Temp6_cleaned.xlsx")
 
-    # Remove commas and convert to float for '        ดบ.ในงวด'
-    col = '        ดบ.ในงวด'
+    # Remove commas and convert to float for 'ดบ.ในงวด'
+    col = 'ดบ.ในงวด'
     if col in cleaned_data.columns:
         cleaned_data[col] = cleaned_data[col].astype(str).str.replace(',', '', regex=False)
         cleaned_data[col] = pd.to_numeric(cleaned_data[col], errors='coerce')
 
     # Sum the column
-    sum_column_a = cleaned_data['        ดบ.ในงวด'].sum()
+    sum_column_a = cleaned_data['ดบ.ในงวด'].sum()
 
     print("Sum of column ดบ.ในงวด:", sum_column_a)
 
@@ -77,5 +77,5 @@ def WM_clean_zfloan20(rawfile) :
 
     print("Sum of column ดบ.ในงวด:", sum_column_a)
 
-    sum_column = cleaned_dataV2['        ดบ.ในงวด'].sum()
+    sum_column = cleaned_dataV2['ดบ.ในงวด'].sum()
     print(sum_column)
