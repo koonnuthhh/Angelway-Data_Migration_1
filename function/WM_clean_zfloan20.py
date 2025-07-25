@@ -28,7 +28,7 @@ def WM_clean_zfloan20(rawfile) :
         # Step 4: Apply your year/month filter on 'การหักล้าง1':
         # Keep rows where year > 2025 OR (year == 2025 AND month > 4)
         mask = (doc_has_value['การหักล้าง'].dt.year > 2025) | \
-            ((doc_has_value['การหักล้าง'].dt.year == 2025) & (doc_has_value['การหักล้าง'].dt.month > pd.Timestamp.now().month))
+            ((doc_has_value['การหักล้าง'].dt.year == 2025) & (doc_has_value['การหักล้าง'].dt.month > 5))
 
         doc_has_value = doc_has_value[mask]
 
@@ -59,7 +59,7 @@ def WM_clean_zfloan20(rawfile) :
     cleaned_data['Pstng Date'] = pd.to_datetime(cleaned_data['Pstng Date'], dayfirst=True)
 
     # Keep only rows where date <= 30.04.2025
-    cleaned_dataV2 = cleaned_data[cleaned_data['Pstng Date'] < pd.to_datetime('30/04/2025', dayfirst=True)]
+    cleaned_dataV2 = cleaned_data[cleaned_data['Pstng Date'] <= pd.Timestamp.today().replace(day=1) + pd.offsets.MonthEnd(0)]
 
     print(cleaned_dataV2)
 
