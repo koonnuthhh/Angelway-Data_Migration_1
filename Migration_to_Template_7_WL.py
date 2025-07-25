@@ -9,7 +9,7 @@ from function.ColumnMappingFunction import map_excel_columns
 import function.Function_count_group_Wl7.transferGroup as tg
 output_file = "Template_7_WL_output.xlsx"
 
-def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, Template_9_file, aging_file,destination_sheet) :
+def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, Template_9_file, aging_file,destination_sheet,) :
 
     # First mapping (Source 1 into Destination)
     mapped_df1 = map_excel_columns(
@@ -165,7 +165,7 @@ def Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source
     # Apply the logic only to the merged DataFrame
     merged_df['ภาษีรอตัด'] = merged_df['vat_installment_amount (J)'] - merged_df['vat_payment']
     
-    filtered = Template_9_df[Template_9_df['payfor_code'] != 1001]
+    filtered = Template_9_df[Template_9_df['payfor_code'] == '1001']
     
     # คำนวณผลรวม payment ของแต่ละ cont_no ใน filtered (จะได้ Series ที่ index เป็น cont_no)
     payment_sum = filtered.groupby('cont_no')['payment'].sum()

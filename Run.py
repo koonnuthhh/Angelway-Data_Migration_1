@@ -26,16 +26,25 @@ from Migration_to_template_12_WM import Migration_to_template_12_WM
 #destination_file= r"C:\Users\andre\Desktop\Migr4tionT3m9\tempWM\WM_test\Tem.6_WM\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
 #Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_file,Aging_file,destination_file)
 
-source_file1= r"C:\Users\andre\Desktop\nwWM6\รายละเอียด  ทำ Temp 6.xlsx"
-zfloan_raw= r"C:\Users\andre\Desktop\nwWM6\ZFLOAN20.xlsx"
-source_file3= r"C:\Users\andre\Desktop\nwWM6\zfloan50 06.2025 ใหม่.XLSX"
-source_file4= r"C:\Users\andre\Desktop\nwWM6\ZFLOAN60.xlsx"
-Temp9_file= r"C:\Users\andre\Desktop\nwWM6\Template_9_WM_output_ใหม่.xlsx"
-Aging_file= r"C:\Users\andre\Desktop\nwWM6\รายละเอียด WM   จากไฟล์ Aging  ทำ Tep 6.xlsx"
-destination_file= r"C:\Users\andre\Desktop\nwWM6\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
-Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_file,Aging_file,destination_file)
+#source_file1= r"C:\Users\andre\Desktop\nwWM6\รายละเอียด  ทำ Temp 6.xlsx"
+#zfloan_raw= r"C:\Users\andre\Desktop\nwWM6\ZFLOAN20.xlsx"
+#source_file3= r"C:\Users\andre\Desktop\nwWM6\zfloan50 06.2025 ใหม่.XLSX"
+#source_file4= r"C:\Users\andre\Desktop\nwWM6\ZFLOAN60.xlsx"
+#Temp9_file= r"C:\Users\andre\Desktop\nwWM6\Template_9_WM_output_ใหม่.xlsx"
+#Aging_file= r"C:\Users\andre\Desktop\nwWM6\รายละเอียด WM   จากไฟล์ Aging  ทำ Tep 6.xlsx"
+#destination_file= r"C:\Users\andre\Desktop\nwWM6\6-ข้อมูลสัญญาเงินกู้ลดต้นลดดอก.xlsx"
+#Migration_to_Template_6_WM(source_file1,zfloan_raw,source_file3,source_file4,Temp9_file,Aging_file,destination_file)
 
-
+source_file_1 = r"C:\Users\andre\Desktop\wl7\Temp7.1.XLSX"
+source_sheet_1 = "Sheet1"
+source_file_2 = r"C:\Users\andre\Desktop\wl7\Temp7.2.XLSX"
+source_sheet_2 = "Sheet1"
+destination_file = r"C:\Users\andre\Desktop\wl7\7-ข้อมูลสัญญาเช่าซื้อ.xlsx"
+destination_sheet = "ข้อมูลสัญญาเชื้อ"
+Template_11_file = r"C:\Users\andre\Desktop\wl7\Template_11_WL_output_27.07.2025.xlsx"
+Template_9_file = r"C:\Users\andre\Desktop\wl7\Template_9_WL_output_24.07.2025.xlsx"
+aging_file = r"C:\Users\andre\Desktop\wl7\wl_zfi11n2n_1014001_06.2025_ok.xlsx"
+Migration_to_Template_7_WL(source_file_1,source_sheet_1,source_file_2,source_sheet_2,destination_file, Template_11_file, Template_9_file, aging_file,destination_sheet,)
 
 
 
