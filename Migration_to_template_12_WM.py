@@ -14,7 +14,7 @@ def Migration_to_template_12_WM(destination_file) :
         'วันครบกำหน': 'due_date',
         '          มูลค่าในงวด': 'installment',
         '              เงินต้น': 'principal',
-        '        ดบ.ในงวด': 'interest'
+        'หดบ.ในงวด': 'interest'
     }
 
     if df_template.empty:
